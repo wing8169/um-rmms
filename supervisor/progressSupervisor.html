@@ -3,9 +3,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script type="text/javascript" src="js/progress/gco.js"></script>
+    <script type="text/javascript" src="../js/progress/gco.js"></script>
     <title>UM Research Meeting Management System</title>
-    <link rel="stylesheet" href="css/progress/gc.css" />
+    <link rel="stylesheet" href="../css/progress/gc.css" />
     <!-- Bootstrap CSS CDN -->
     <link
       rel="stylesheet"
@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <!-- Font Awesome JS -->
     <script
       defer
@@ -43,37 +43,43 @@
       href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css"
     />
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+    <style>
+      .card {
+        border-radius: 2rem;
+        border-width: 2px;
+      }
+    </style>
   </head>
   <body>
     <div class="wrapper">
       <!-- Sidebar Holder -->
       <nav id="sidebar">
         <div class="sidebar-header">
-          <img src="img/umrmms.png" alt="UM RMMS" />
-          <h5 class="text-center">Welcome back, student.</h5>
+          <img src="../img/umrmms.png" alt="UM RMMS" />
+          <h5 class="text-center">Welcome back, supervisor.</h5>
         </div>
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeeting.html">Add Meeting</a>
+            <a href="addMeetingSupervisor.html">Add Meeting</a>
           </li>
           <li>
-            <a href="manageMeeting.html">Meeting Records</a>
+            <a href="manageMeetingSupervisor.html">Meeting Records</a>
           </li>
           <li>
-            <a href="checklist.html">Checklist</a>
+            <a href="checklistSupervisor.html">Checklist</a>
           </li>
           <li class="active">
             <a href="#">Manage Progress</a>
           </li>
           <li>
-            <a href="reviewStudent.html">Review Reports</a>
+            <a href="reviewSupervisor.html">Review Reports</a>
           </li>
         </ul>
 
         <ul class="list-unstyled CTAs">
           <li>
-            <a href="index.html" class="download">Log Out</a>
+            <a href="../index.html" class="download">Log Out</a>
           </li>
         </ul>
       </nav>
@@ -99,13 +105,11 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Student</a>
-                </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="supervisor/progressSupervisor.html"
-                    >Supervisor</a
-                  >
+                  <a class="nav-link" href="../progress.html">Student</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Supervisor</a>
                 </li>
               </ul>
             </div>
@@ -117,156 +121,94 @@
         >
           Research Progress
         </h1>
-        <div class="container mt-3 p-3">
-          <div id="chart_div"></div>
-        </div>
-        <div class="container mt-3">
-          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                id="pills-home-tab"
-                data-toggle="pill"
-                href="#pills-home"
-                role="tab"
-                aria-controls="pills-home"
-                aria-selected="true"
-                >Add Task</a
+        <h3 class="mb-4 text-center">Students</h3>
+        <div class="row justify-content-center">
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Ang Chun Wah</h5>
+              <p class="card-text">
+                ycwahwah@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
               >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                id="pills-profile-tab"
-                data-toggle="pill"
-                href="#pills-profile"
-                role="tab"
-                aria-controls="pills-profile"
-                aria-selected="false"
-                >Update Task</a
-              >
-            </li>
-          </ul>
-          <div class="tab-content" id="pills-tabContent">
-            <div
-              class="tab-pane fade show active"
-              id="pills-home"
-              role="tabpanel"
-              aria-labelledby="pills-home-tab"
-            >
-              <form>
-                <div class="form-group">
-                  <label for="taskname">Task Name: </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="taskname"
-                    placeholder="Enter task name"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="sdate">Start Date: </label>
-                  <input type="date" class="form-control" id="sdate" />
-                </div>
-
-                <div class="form-group">
-                  <label for="edate">End Date: </label>
-                  <input type="date" class="form-control" id="edate" />
-                </div>
-
-                <div class="form-group">
-                  <label for="percent">Percent Complete</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="percent"
-                    placeholder="Enter the percent"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="depend">Dependencies</label>
-                  <select
-                    class="selectpicker form-control"
-                    id="depend"
-                    multiple
-                  >
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="add"
-                    type="button"
-                    value="Add Task"
-                  />
-                </div>
-              </form>
             </div>
-            <div
-              class="tab-pane fade"
-              id="pills-profile"
-              role="tabpanel"
-              aria-labelledby="pills-profile-tab"
-            >
-              <form>
-                <div class="form-group">
-                  <label for="taskname2">Task Name: </label>
-                  <select id="taskname2" class="custom-select" required>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="sdate2">Start Date: </label>
-                  <input type="date" class="form-control" id="sdate2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="edate2">End Date: </label>
-                  <input type="date" class="form-control" id="edate2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="percent2">Percent Complete</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="percent2"
-                    placeholder="Enter the percent"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="depend2">Dependencies</label>
-                  <select
-                    class="selectpicker form-control"
-                    id="depend2"
-                    multiple
-                  >
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="update"
-                    type="button"
-                    value="Update Task"
-                  />
-
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="remove"
-                    type="button"
-                    value="Remove Task"
-                  />
-                </div>
-              </form>
+          </div>
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Aidy</h5>
+              <p class="card-text">
+                aidy@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
+              >
+            </div>
+          </div>
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Cheng Kean Boon</h5>
+              <p class="card-text">
+                kbryant@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
+              >
+            </div>
+          </div>
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Chin Jia Xiong</h5>
+              <p class="card-text">
+                pffffxiongxiong@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
+              >
+            </div>
+          </div>
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Ong Pei Ling</h5>
+              <p class="card-text">
+                peiling@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
+              >
+            </div>
+          </div>
+          <div
+            class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3"
+            style="width: 18rem;"
+          >
+            <div class="card-body">
+              <h5 class="card-title">Chor Choon Heng</h5>
+              <p class="card-text">
+                chorvv@gmail.com
+              </p>
+              <a href="../progress.html" class="btn btn-primary"
+                >View Progress</a
+              >
             </div>
           </div>
         </div>
+
         <footer class="footer">
           <div class="container">
             <hr />
@@ -310,7 +252,7 @@
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"
     ></script>
-    <script type="text/javascript" src="js/progress/gc.js"></script>
+    <script type="text/javascript" src="../js/progress/gc.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/js/bootstrap-select.min.js"></script>
 

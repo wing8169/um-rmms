@@ -12,8 +12,9 @@
       integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="../css/checklist/styleChecklist.css" />
     <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <!-- Font Awesome JS -->
     <script
       defer
@@ -38,37 +39,36 @@
     />
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
   </head>
-
   <body>
     <div class="wrapper">
       <!-- Sidebar Holder -->
       <nav id="sidebar">
         <div class="sidebar-header">
-          <img src="img/umrmms.png" alt="UM RMMS" />
-          <h5 class="text-center">Welcome back, student.</h5>
+          <img src="../img/umrmms.png" alt="UM RMMS" />
+          <h5 class="text-center">Welcome back, supervisor.</h5>
         </div>
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeeting.html">Add Meeting</a>
+            <a href="addMeetingSupervisor.html">Add Meeting</a>
           </li>
           <li>
-            <a href="manageMeeting.html">Meeting Records</a>
-          </li>
-          <li>
-            <a href="checklist.html">Checklist</a>
-          </li>
-          <li>
-            <a href="progress.html">Manage Progress</a>
+            <a href="manageMeetingSupervisor.html">Meeting Records</a>
           </li>
           <li class="active">
-            <a href="#">Review Reports</a>
+            <a href="#">Checklist</a>
+          </li>
+          <li>
+            <a href="progressSupervisor.html">Manage Progress</a>
+          </li>
+          <li>
+            <a href="reviewSupervisor.html">Review Reports</a>
           </li>
         </ul>
 
         <ul class="list-unstyled CTAs">
           <li>
-            <a href="index.html" class="download">Log Out</a>
+            <a href="../index.html" class="download">Log Out</a>
           </li>
         </ul>
       </nav>
@@ -94,13 +94,11 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Student</a>
-                </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="supervisor/reviewSupervisor.html"
-                    >Supervisor</a
-                  >
+                  <a class="nav-link" href="../checklist.html">Student</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Supervisor</a>
                 </li>
               </ul>
             </div>
@@ -110,87 +108,92 @@
           class="text-center mt-3 mb-3"
           style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
         >
-          Submit Report
+          Checklist
         </h1>
-        <div class="jumbotron" style="background-color: #F0F8FF;">
-          <form>
-            <div class="form-group">
-              <label for="exampleInputEmail1">*Email address:</label>
-              <input
-                type="email"
-                class="form-control typeahead"
-                id="exampleInputEmail1"
-                aria-describedby="emailHelp"
-                placeholder="Enter email of recipient"
-              />
-              <small id="emailHelp" class="form-text text-muted" required
-                >Recipient email</small
-              >
-            </div>
+        <!-- Add new item -->
+        <div class="row justify-content-center">
+          <div class="add col-xs-12 col-md-6 mb-3">
+            <input
+              class="addtask form-control"
+              id="addtask"
+              type="text"
+              placeholder=" + Add Task"
+            />
+          </div>
+        </div>
 
-            <div class="filesubmit">
-              <label for="fileSubmit">*Please Upload Your File:</label>
-              <input type="file" class="file-select" accept="image/*" />
-              <div class="mt-3">
-                <button type="submit" class="btn btn-primary" required>
-                  Submit
-                </button>
+        <!-- <div class="editgroup-off">
+          <div class="item editdeadline">
+            <p><i class="far fa-calendar-alt "></i>Deadline</p>
+            <input class="deadline_day" type="date" />
+            <input class="deadline_time" type="time" />
+          </div>
+          <div class="item editcomment">
+            <p><i class="far fa-comment-alt "></i>Comment</p>
+            <input class="comment" type="text" />
+          </div>
+          <div class="setting">
+            <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+            <P class="save"><i class="far fa-save"></i>Add</P>
+          </div>
+        </div> -->
+
+        <div class="editgroup-off">
+          <div class="item editdeadline">
+            <p><i class="far fa-calendar-alt "></i>Deadline</p>
+            <input class="deadline_day" type="date" value="2018-12-15" />
+            <input class="deadline_time" type="time" />
+          </div>
+          <div class="item editcomment">
+            <p><i class="far fa-comment-alt "></i>Comment</p>
+            <input class="comment" type="text" />
+            <div class="setting">
+              <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+              <P class="save"><i class="far fa-save"></i>Save</P>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <!-- To do list -->
+          <div class="todolist">
+            <div class="listitem">
+              <div class="main">
+                <input type="checkbox" class="checkbox" />
+                <p>Sample</p>
+                <i class="far fa-star fa-lg star"></i>
+                <i class="far fa-edit fa-lg pen"></i>
+              </div>
+              <div class="detail">
+                <span class="icon"
+                  ><i class="far fa-calendar-alt "></i>2018-12-15</span
+                >
+                <span class="icon"><i class="far fa-file "></i></span>
+                <span class="icon"><i class="far fa-comment-alt "></i></span>
+              </div>
+              <div class="itemeditgroup">
+                <div class="item editdeadline">
+                  <p><i class="far fa-calendar-alt "></i>Deadline</p>
+                  <input class="deadline_day" type="date" value="2018-12-15" />
+                  <input class="deadline_time" type="time" />
+                </div>
+                <div class="item editcomment">
+                  <p><i class="far fa-comment-alt "></i>Comment</p>
+                  <input class="comment" type="text" />
+                </div>
+                <div class="setting">
+                  <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+                  <P class="save"><i class="far fa-save"></i>Save</P>
+                </div>
               </div>
             </div>
-          </form>
-          <table class="table mt-5">
-            <thead class="thead-dark">
-              <tr>
-                <th>ID</th>
-                <th>Report Name</th>
-                <th>Submission Date</th>
-                <th>Reviewed by</th>
-                <th>Status</th>
-                <th>Reason</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>finalest.pdf</td>
-                <td>2019-03-31</td>
-                <td>Dr Chiam Yin Kia</td>
-                <td>Approved</td>
-                <td>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Cupiditate, ad eligendi optio magnam praesentium, corrupti
-                  alias aut odit necessitatibus nostrum odio voluptatem voluptas
-                  quidem quasi veniam illum laboriosam voluptate dignissimos.
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>finaler.pdf</td>
-                <td>2019-03-29</td>
-                <td>Dr Chiam Yin Kia</td>
-                <td>Disapproved</td>
-                <td>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Cupiditate, ad eligendi optio magnam praesentium, corrupti
-                  alias aut odit necessitatibus nostrum odio voluptatem voluptas
-                  quidem quasi veniam illum laboriosam voluptate dignissimos.
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>final.pdf</td>
-                <td>2019-03-28</td>
-                <td>Dr Chiam Yin Kia</td>
-                <td>Disapproved</td>
-                <td>
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Cupiditate, ad eligendi optio magnam praesentium, corrupti
-                  alias aut odit necessitatibus nostrum odio voluptatem voluptas
-                  quidem quasi veniam illum laboriosam voluptate dignissimos.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          </div>
+        </div>
+        <div class="tab hide">
+          <div class="todolist"></div>
+        </div>
+        <div class="tab hide">
+          <div class="todolist"></div>
         </div>
         <footer class="footer">
           <div class="container">
@@ -234,6 +237,7 @@
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"
     ></script>
+    <script src="../js/checklist/index.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
         $("#sidebarCollapse").on("click", function() {
@@ -242,6 +246,5 @@
         });
       });
     </script>
-    <script src="js/reviewStudent/autocomplete.js"></script>
   </body>
 </html>
