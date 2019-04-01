@@ -29,10 +29,7 @@
       crossorigin="anonymous"
     ></script>
     <!-- Google Font -->
-    <link
-      href="//fonts.googleapis.com/css?family=Roboto"
-      rel="stylesheet"
-    />
+    <link href="//fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
     <!-- icon -->
     <link
       rel="stylesheet"
@@ -45,10 +42,7 @@
       rel="stylesheet"
       href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css"
     />
-    <link
-      href="//fonts.googleapis.com/css?family=Mukta"
-      rel="stylesheet"
-    />
+    <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
   </head>
   <body>
     <div class="wrapper">
@@ -384,7 +378,7 @@
           updateForms(data[0][0]);
         });
         // update fields based on task
-        $("#taskname2").on("click", function() {
+        $("#taskname2").on("change", function() {
           updateForms($("#taskname2").val());
         });
         // update form function
@@ -400,6 +394,7 @@
           var newRow = [id, id, sdate, edate, null, percent, depend];
           data[data.findIndex(e => e[0] === id)] = newRow;
           updateChart(data);
+          updateTaskNames();
           updateForms(data[0][0]);
         });
 
