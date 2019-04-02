@@ -24,6 +24,27 @@ function updateChart(data) {
   newdata.addColumn("string", "Dependencies");
   newdata.addRows(data);
 
+  // data.addRows([
+  //   [
+  //     "Research",
+  //     "Find sources",
+  //     new Date(2015, 0, 1),
+  //     new Date(2015, 0, 5),
+  //     null,
+  //     100,
+  //     null
+  //   ],
+  //   [
+  //     "Write",
+  //     "Write paper",
+  //     null,
+  //     new Date(2015, 0, 9),
+  //     daysToMilliseconds(3),
+  //     25,
+  //     "Research,Outline"
+  //   ]
+  // ]);
+
   var options = {
     height: data.length * 50 + 50,
     width: 1300,
