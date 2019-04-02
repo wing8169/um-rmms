@@ -232,13 +232,6 @@ function addNote(id) {
 
 function init() {
   $(".delete").click(function() {
-    console.log(
-      $(this)
-        .parent()
-        .parent()
-        .parent()
-        .parent()
-    );
     $(this)
       .parent()
       .parent()
@@ -248,6 +241,97 @@ function init() {
   });
 }
 
+// $(document).ready(function() {
+//   init();
+// });
+
+var meetingInfo = [
+  {
+    image: "../../img/test.jpeg",
+    title: "Group discussion 1",
+    date: "19/5/2019",
+    time: "9.45am",
+    venue: "FSKTM",
+    details: "HS Ong and discuss about our project purpose."
+  },
+  {
+    image: "../../img/meeting1.jpg",
+    title: "Group discussion 2",
+    date: "19/5/2019",
+    time: "9.45am",
+    venue: "FSKTM",
+    details: "HS Ong and discuss about our project purpose."
+  }
+];
+
 $(document).ready(function() {
-  init();
+  for (i = 0; i < meetingInfo.length; i++) {
+    if (i == 0) {
+      $("#meetingrecord").append(`<div class="carousel-item active">
+    <div class="row justify-content-center">
+      <div class="card pl-0 pr-0 col-6 border-light">
+        <div class="inner">
+          <img
+            class="card-img-top img-fluid"
+            src="${meetingInfo[i].image}"
+            alt="Card image cap"
+          />
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">${meetingInfo[i].title}</h4>
+          <p class="card-text">
+            <strong>Date</strong>
+            ${meetingInfo[i].date}
+            <br />
+            <strong>Time </strong>
+            ${meetingInfo[i].time}
+            <br />
+            <strong>Venue </strong>
+            ${meetingInfo[i].venue}
+            <br />
+            <strong>Meeting details </strong>
+            ${meetingInfo[i].details}
+          </p>
+          <p class="card-text">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>`);
+    } else {
+      $("#meetingrecord").append(`<div class="carousel-item ">
+    <div class="row justify-content-center">
+      <div class="card pl-0 pr-0 col-6 border-light">
+        <div class="inner">
+          <img
+            class="card-img-top img-fluid"
+            src="${meetingInfo[i].image}"
+            alt="Card image cap"
+          />
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">${meetingInfo[i].title}</h4>
+          <p class="card-text">
+            <strong>Date</strong>
+            ${meetingInfo[i].date}
+            <br />
+            <strong>Time </strong>
+            ${meetingInfo[i].time}
+            <br />
+            <strong>Venue </strong>
+            ${meetingInfo[i].venue}
+            <br />
+            <strong>Meeting details </strong>
+            ${meetingInfo[i].details}
+          </p>
+          <p class="card-text">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>`);
+    }
+  }
 });
