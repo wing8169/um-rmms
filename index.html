@@ -26,15 +26,12 @@
     <style>
       body {
         background-image: url("img/blueGradient1.png");
-        /* background-color: white; */
         background-repeat: no-repeat;
         background-size: cover;
-        /* background-color: #78a5ed; */
       }
       input[type="text"],
       input[type="password"] {
         width: 100%;
-        /* padding: 12px 20px; */
         margin: 8px 0;
         display: inline-block;
         border: 1px solid #ccc;
@@ -70,17 +67,9 @@
       }
 
       .modal-content {
-        background-color: #7ec4d3;
+        border-color: #7ec4d3;
         border-radius: 2rem;
-        padding: 20px;
-      }
-
-      .modal-header {
-        border-color: #7ec4d3;
-      }
-
-      .modal-footer {
-        border-color: #7ec4d3;
+        padding: 10px;
       }
 
       .animate {
@@ -95,22 +84,8 @@
         margin-right: auto;
       }
 
-      @-webkit-keyframes animatezoom {
-        from {
-          -webkit-transform: scale(0);
-        }
-        to {
-          -webkit-transform: scale(1);
-        }
-      }
-
-      @keyframes animatezoom {
-        from {
-          transform: scale(0);
-        }
-        to {
-          transform: scale(1);
-        }
+      .btn-info {
+        border-color: #7ec4d3;
       }
     </style>
   </head>
@@ -162,17 +137,6 @@
               required
             />
           </div>
-          <!-- <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              checked="checked"
-              name="remember"
-            />
-            <label for="remember" class="form-check-label">
-              Remember me
-            </label>
-          </div> -->
           <div class="row justify-content-center">
             <button
               onclick="location.href = 'addMeeting.html';"
@@ -258,11 +222,18 @@
                       required
                     />
                   </div>
+                  <div class="form-group">
+                    <label for="role"><b>Select your role</b></label>
+                    <select id="role" class="custom-select" required>
+                      <option value="student">Student</option>
+                      <option value="supervisor">Supervisor</option>
+                    </select>
+                  </div>
                 </div>
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-info">
                     Sign Up Now
                   </button>
                   <button
@@ -310,7 +281,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-info">
                     Send confirmation email
                   </button>
                   <button

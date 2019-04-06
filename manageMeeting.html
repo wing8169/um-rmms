@@ -51,10 +51,10 @@
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeeting.html">Add Meeting</a>
+            <a href="addMeeting.html">Meeting Schedule</a>
           </li>
           <li class="active">
-            <a href="#">Meeting Records</a>
+            <a href="#">Manage Meeting Records</a>
           </li>
           <li>
             <a href="checklist.html">Checklist</a>
@@ -111,63 +111,69 @@
         </nav>
         <h1
           class="text-center mt-3 mb-3"
-          style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
+          style="font-family: 'Mukta', sans-serif;color: #7BABED;"
         >
-          Meeting Records
+          Manage Meeting Records
         </h1>
         <div class="row justify-content-center">
-          <div
-            id="myCarousel"
-            class="carousel slide col-md-8 col-xs-12"
-            data-ride="carousel"
-            data-interval="false"
-          >
-            <div id="meetingrecord" class="carousel-inner"></div>
-            <a
-              class="carousel-control-prev"
-              href="#myCarousel"
-              role="button"
-              data-slide="prev"
-            >
-              <span
-                class="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a
-              class="carousel-control-next"
-              href="#myCarousel"
-              role="button"
-              data-slide="next"
-            >
-              <span
-                class="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
-              <span class="sr-only">Next</span>
-            </a>
-          </div>
-        </div>
-        <div class="notes mt-5 mb-2">
-          <h2 style="color: #7BABED; text-align: center;" id="welcome">
-            Add your notes here...
-          </h2>
-          <div id="controls">
-            <i class="icon-doc-text" id="createNote"
-              ><img src="img/button.png" alt="Button" height="30" width="30"
-            /></i>
-          </div>
+          <div class="col-lg-8 col-md-12">
+            <div class="row justify-content-center">
+              <div
+                id="myCarousel"
+                class="carousel slide col-md-8 col-xs-12"
+                data-ride="carousel"
+                data-interval="false"
+              >
+                <div id="meetingrecord" class="carousel-inner w-100"></div>
 
-          <!-- <ul id="notes-list"></ul> -->
-        </div>
+                <a
+                  class="carousel-control-prev"
+                  href="#myCarousel"
+                  role="button"
+                  data-slide="prev"
+                >
+                  <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a
+                  class="carousel-control-next"
+                  href="#myCarousel"
+                  role="button"
+                  data-slide="next"
+                >
+                  <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            </div>
 
-        <div class=" text-center">
-          <ul
-            id="myCard"
-            class="row justify-content-center"
-            style="padding-left: 20%; padding-right: 20%"
-          ></ul>
+            <div class="notes mt-5 mb-2">
+              <h2 style="color: #7BABED; text-align: center;" id="welcome">
+                Add your notes here...
+              </h2>
+              <div id="controls">
+                <i class="icon-doc-text" id="createNote"
+                  ><img src="img/button.png" alt="Button" height="30" width="30"
+                /></i>
+              </div>
+            </div>
+
+            <div class=" text-center">
+              <ul
+                id="myCard"
+                class="row justify-content-center"
+                style="padding-left: 20%; padding-right: 20%"
+              >
+                <!-- Add notes here -->
+              </ul>
+            </div>
+          </div>
         </div>
         <footer class="footer">
           <div class="container">

@@ -392,14 +392,14 @@
   background-color: #fafafa;
 }
 .cal-month-day {
-  height: 100px;
+  height: 70px;
 }
 [class*="cal-cell"]:hover {
   background-color: #ededed;
 }
 .cal-year-box [class*="span"],
 .cal-month-box [class*="cal-cell"] {
-  min-height: 100px;
+  min-height: 60px;
   border-right: 1px solid #e1e1e1;
   position: relative;
 }
@@ -493,7 +493,7 @@ span[data-cal-date]:hover {
   background-image: url("../../img/tick.png?2");
 }
 #cal-slide-content:hover {
-  background-color: transparent;
+  /* background-color: transparent; */
 }
 #cal-slide-content a.event-item {
   color: #ffffff;
