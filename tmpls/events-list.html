@@ -7,13 +7,13 @@
       <%= event.title %>
     </li>
     <li>
-      Date: <%= event.date %>
+      Date: <%= getDate(event.start) %>
     </li>
     <li>
-      Start Time: <%= event.time %>
+      Start Time: <%= getTime(event.start) %>
     </li>
     <li>
-      End Time: <%= event.time %>
+      End Time: <%= getTime(event.end) %>
     </li>
     <li>
       Venue: <%= event.venue %>

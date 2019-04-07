@@ -122,13 +122,13 @@
           <div class="col-lg-8 col-md-12">
             <div class="row mb-3 mt-3">
               <div class="btn-group col-md-12 col-lg-4 mb-3">
-                <button class="btn btn-info" data-calendar-nav="prev">
+                <button class="btn btn-primary" data-calendar-nav="prev">
                   << Prev
                 </button>
-                <button class="btn btn-info" data-calendar-nav="today">
+                <button class="btn btn-primary" data-calendar-nav="today">
                   Today
                 </button>
-                <button class="btn btn-info" data-calendar-nav="next">
+                <button class="btn btn-primary" data-calendar-nav="next">
                   Next >>
                 </button>
               </div>
@@ -137,13 +137,16 @@
               </div>
 
               <div class="btn-group col-md-12 offset-lg-1 col-lg-3 mb-3">
-                <button class="btn btn-info" data-calendar-view="year">
+                <button class="btn btn-primary" data-calendar-view="year">
                   Year
                 </button>
-                <button class="btn btn-info active" data-calendar-view="month">
+                <button
+                  class="btn btn-primary active"
+                  data-calendar-view="month"
+                >
                   Month
                 </button>
-                <button class="btn btn-info" data-calendar-view="week">
+                <button class="btn btn-primary" data-calendar-view="week">
                   Week
                 </button>
               </div>
@@ -244,7 +247,9 @@
                 <input type="text" class="form-control typeahead" id="guests" />
               </div>
               <div class="row justify-content-center">
-                <button type="submit" class="btn btn-info">Submit</button>
+                <button type="submit" class="btn btn-primary">
+                  Add Meeting
+                </button>
               </div>
             </form>
           </div>
@@ -274,7 +279,18 @@
         </footer>
       </div>
     </div>
+    <script>
+      function getDate(milli) {
+        var tmp = new Date(parseInt(milli));
+        return tmp.toLocaleDateString();
+      }
 
+      function getTime(milli) {
+        var tmp = new Date(parseInt(milli));
+        var tmpTime = tmp.toLocaleTimeString();
+        return tmpTime.slice(0, 4) + " " + tmpTime.slice(8).toLowerCase();
+      }
+    </script>
     <!-- jQuery CDN - Minified version -->
     <script
       src="//code.jquery.com/jquery-3.3.1.min.js"

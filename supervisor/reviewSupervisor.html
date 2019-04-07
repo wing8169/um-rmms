@@ -37,6 +37,19 @@
       crossorigin="anonymous"
     />
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+    <style>
+      tbody {
+        display: block;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      thead,
+      tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
+    </style>
   </head>
 
   <body>
@@ -50,10 +63,10 @@
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeetingSupervisor.html">Add Meeting</a>
+            <a href="addMeetingSupervisor.html">Meeting Schedule</a>
           </li>
           <li>
-            <a href="manageMeetingSupervisor.html">Meeting Records</a>
+            <a href="manageMeetingSupervisor.html">Manage Meeting Records</a>
           </li>
           <li>
             <a href="checklistSupervisor.html">Checklist</a>
@@ -106,47 +119,59 @@
         </nav>
         <h1
           class="text-center mt-3 mb-3"
-          style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
+          style="font-family: 'Mukta', sans-serif;color: #7BABED;"
         >
           Review Report
         </h1>
-        <div class="jumbotron" style="background-color: #F0F8FF;">
-          <form>
-            <div class="form-group">
-              <label for="reportID">*Report ID:</label>
-              <select id="reportID" class="custom-select" required>
-                <option value="">Select the ID of report to be reviewed</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="setstatus">Set status:</label>
-              <select id="setstatus" class="custom-select" required>
-                <option value="">Set status</option>
-                <option value="1">Pending</option>
-                <option value="2">Approve</option>
-                <option value="3">Disapprove</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="reason">Reason</label>
-              <textarea
-                class="form-control"
-                id="reason"
-                rows="5"
-                style="height:100%;"
-                placeholder="The reason of approval / disapproval"
-              ></textarea>
-            </div>
-            <div class="mt-3">
-              <button type="submit" class="btn btn-primary" required>
-                Submit
-              </button>
-            </div>
-          </form>
-          <table class="table mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 col-sm-12">
+            <form>
+              <div class="form-group">
+                <label for="reportID">*Report ID:</label>
+                <select id="reportID" class="custom-select" required>
+                  <option value=""
+                    >Select the ID of report to be reviewed</option
+                  >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="setstatus">Set status:</label>
+                <select id="setstatus" class="custom-select" required>
+                  <option value="">Status of report</option>
+                  <option value="1">Pending</option>
+                  <option value="2">Reviewed</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="reason">Review of report: </label>
+                <textarea
+                  class="form-control"
+                  id="reason"
+                  rows="5"
+                  style="height:100%;"
+                  placeholder="Comments on the report"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="fileSubmit">Attachment: </label>
+                <input
+                  type="file"
+                  id="fileSubmit"
+                  class="form-control"
+                  accept="image/*"
+                />
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn btn-primary" required>
+                  Upload
+                </button>
+              </div>
+            </form>
+          </div>
+          <table class="table mt-5 ml-5 mr-5">
             <thead class="thead-dark">
               <tr>
                 <th>ID</th>
@@ -160,30 +185,30 @@
             <tbody>
               <tr>
                 <td>1</td>
-                <td>finalest.pdf</td>
+                <td>Meeting report on March 31</td>
                 <td>2019-03-31</td>
                 <td>Nobita Kun</td>
-                <td>Approved</td>
+                <td>Pending</td>
                 <td>
                   <a href="#">Click to download</a>
                 </td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>finaler.pdf</td>
+                <td>Meeting report on March 29</td>
                 <td>2019-03-29</td>
                 <td>Nobita Kun</td>
-                <td>Disapproved</td>
+                <td>Reviewed</td>
                 <td>
                   <a href="#">Click to download</a>
                 </td>
               </tr>
               <tr>
                 <td>3</td>
-                <td>final.pdf</td>
+                <td>Meeting report on March 28</td>
                 <td>2019-03-28</td>
                 <td>Nobita Kun</td>
-                <td>Disapproved</td>
+                <td>Reviewed</td>
                 <td>
                   <a href="#">Click to download</a>
                 </td>
@@ -191,7 +216,7 @@
             </tbody>
           </table>
           <h3 class="text-center mt-5">Review history</h3>
-          <table class="table mt-5">
+          <table class="table mt-5 ml-5 mr-5">
             <thead class="thead-dark">
               <tr>
                 <th>ID</th>
@@ -199,52 +224,50 @@
                 <th>Submission Date</th>
                 <th>Submitted by</th>
                 <th>Status</th>
-                <th>Reason</th>
+                <th>Comments</th>
+                <th>Attachments</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>1</td>
-                <td>finalest.pdf</td>
+                <td>Meeting report on March 31</td>
                 <td>2019-03-31</td>
                 <td>Nobita Kun</td>
-                <td>Approved</td>
-                <td>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Earum cum, aut sequi dignissimos modi incidunt vero nobis
-                  tenetur eveniet nulla omnis doloremque animi fugiat doloribus
-                  aperiam inventore debitis repudiandae. Expedita.
-                </td>
+                <td>Pending</td>
+                <td></td>
+                <td></td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>finaler.pdf</td>
+                <td>Meeting report on March 29</td>
                 <td>2019-03-29</td>
                 <td>Nobita Kun</td>
-                <td>Disapproved</td>
+                <td>Reviewed</td>
                 <td>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Earum cum, aut sequi dignissimos modi incidunt vero nobis
-                  tenetur eveniet nulla omnis doloremque animi fugiat doloribus
-                  aperiam inventore debitis repudiandae. Expedita.
+                  Lorem ipsum
+                </td>
+                <td>
+                  <a href="#">Click to download</a>
                 </td>
               </tr>
               <tr>
                 <td>3</td>
-                <td>final.pdf</td>
+                <td>Meeting report on March 28</td>
                 <td>2019-03-28</td>
                 <td>Nobita Kun</td>
-                <td>Disapproved</td>
+                <td>Reviewed</td>
                 <td>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Earum cum, aut sequi dignissimos modi incidunt vero nobis
-                  tenetur eveniet nulla omnis doloremque animi fugiat doloribus
-                  aperiam inventore debitis repudiandae. Expedita.
+                  Lorem ipsum
+                </td>
+                <td>
+                  <a href="#">Click to download</a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+
         <footer class="footer">
           <div class="container">
             <hr />
