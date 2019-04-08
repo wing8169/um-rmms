@@ -45,6 +45,56 @@
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
   </head>
   <body>
+    <!--Delete message -->
+    <div
+      class="modal fade"
+      id="deleteAlert"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Delete Message
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this meeting?<br />
+            This cannot be undone.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick="remove()"
+              data-dismiss="modal"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Delete message ends -->
+
     <div class="wrapper">
       <!-- Sidebar Holder -->
       <nav id="sidebar">
@@ -260,6 +310,8 @@
 
                       <input
                         class="btn btn-primary"
+                        data-toggle="modal"
+                        data-target="#deleteAlert"
                         id="remove"
                         type="button"
                         value="Remove Task"
@@ -353,6 +405,29 @@
           }
         }
       }
+      function remove() {
+        var id = $("#taskname2").val();
+        var index = data.findIndex(e => e[0] === id);
+        data.splice(index, 1);
+        for (let i = 0; i < data.length; i++) {
+          if (data[i][6] === null || data[i][6] === "") continue;
+          let dependencies = data[i][6].split(",");
+          let j = dependencies.findIndex(e => e === id);
+          if (j !== -1) dependencies.splice(j, 1);
+          data[i][6] = dependencies.join(",");
+          if (data[i][6] === "") data[i][6] = null;
+        }
+        updateChart(data);
+        updateTaskNames();
+        if ($("#taskname2").val() !== "") {
+          updateForms($("#taskname2").val());
+        }
+        $("#depend").empty();
+        data.forEach(function(item, index) {
+          $("#depend").append(`<option>${item[0]}</option>`);
+        });
+        $("#depend").selectpicker("refresh");
+      }
       $(document).ready(function() {
         // side bar function
         $("#sidebarCollapse").on("click", function() {
@@ -404,29 +479,29 @@
           updateForms(data[0][0]);
         });
 
-        $("#remove").on("click", function() {
-          var id = $("#taskname2").val();
-          var index = data.findIndex(e => e[0] === id);
-          data.splice(index, 1);
-          for (let i = 0; i < data.length; i++) {
-            if (data[i][6] === null || data[i][6] === "") continue;
-            let dependencies = data[i][6].split(",");
-            let j = dependencies.findIndex(e => e === id);
-            if (j !== -1) dependencies.splice(j, 1);
-            data[i][6] = dependencies.join(",");
-            if (data[i][6] === "") data[i][6] = null;
-          }
-          updateChart(data);
-          updateTaskNames();
-          if ($("#taskname2").val() !== "") {
-            updateForms($("#taskname2").val());
-          }
-          $("#depend").empty();
-          data.forEach(function(item, index) {
-            $("#depend").append(`<option>${item[0]}</option>`);
-          });
-          $("#depend").selectpicker("refresh");
-        });
+        // $("#remove").on("click", function() {
+        //   var id = $("#taskname2").val();
+        //   var index = data.findIndex(e => e[0] === id);
+        //   data.splice(index, 1);
+        //   for (let i = 0; i < data.length; i++) {
+        //     if (data[i][6] === null || data[i][6] === "") continue;
+        //     let dependencies = data[i][6].split(",");
+        //     let j = dependencies.findIndex(e => e === id);
+        //     if (j !== -1) dependencies.splice(j, 1);
+        //     data[i][6] = dependencies.join(",");
+        //     if (data[i][6] === "") data[i][6] = null;
+        //   }
+        //   updateChart(data);
+        //   updateTaskNames();
+        //   if ($("#taskname2").val() !== "") {
+        //     updateForms($("#taskname2").val());
+        //   }
+        //   $("#depend").empty();
+        //   data.forEach(function(item, index) {
+        //     $("#depend").append(`<option>${item[0]}</option>`);
+        //   });
+        //   $("#depend").selectpicker("refresh");
+        // });
       });
     </script>
   </body>
