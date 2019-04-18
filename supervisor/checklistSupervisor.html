@@ -50,10 +50,10 @@
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeetingSupervisor.html">Add Meeting</a>
+            <a href="addMeetingSupervisor.html">Meeting Schedule</a>
           </li>
           <li>
-            <a href="manageMeetingSupervisor.html">Meeting Records</a>
+            <a href="manageMeetingSupervisor.html">Manage Meeting Records</a>
           </li>
           <li class="active">
             <a href="#">Checklist</a>
@@ -106,94 +106,88 @@
         </nav>
         <h1
           class="text-center mt-3 mb-3"
-          style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
+          style="font-family: 'Mukta', sans-serif;color: #7BABED;"
         >
           Checklist
         </h1>
-        <!-- Add new item -->
         <div class="row justify-content-center">
-          <div class="add col-xs-12 col-md-6 mb-3">
-            <input
-              class="addtask form-control"
-              id="addtask"
-              type="text"
-              placeholder=" + Add Task"
-            />
-          </div>
-        </div>
-
-        <!-- <div class="editgroup-off">
-          <div class="item editdeadline">
-            <p><i class="far fa-calendar-alt "></i>Deadline</p>
-            <input class="deadline_day" type="date" />
-            <input class="deadline_time" type="time" />
-          </div>
-          <div class="item editcomment">
-            <p><i class="far fa-comment-alt "></i>Comment</p>
-            <input class="comment" type="text" />
-          </div>
-          <div class="setting">
-            <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
-            <P class="save"><i class="far fa-save"></i>Add</P>
-          </div>
-        </div> -->
-
-        <div class="editgroup-off">
-          <div class="item editdeadline">
-            <p><i class="far fa-calendar-alt "></i>Deadline</p>
-            <input class="deadline_day" type="date" value="2018-12-15" />
-            <input class="deadline_time" type="time" />
-          </div>
-          <div class="item editcomment">
-            <p><i class="far fa-comment-alt "></i>Comment</p>
-            <input class="comment" type="text" />
-            <div class="setting">
-              <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
-              <P class="save"><i class="far fa-save"></i>Save</P>
+          <div class="col-lg-8 col-md-12">
+            <!-- Add new item -->
+            <div class="row justify-content-center">
+              <div class="add col-xs-12 col-md-6 mb-3">
+                <input
+                  class="addtask form-control"
+                  id="addtask"
+                  type="text"
+                  placeholder=" + Add Task"
+                />
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="mt-4">
-          <!-- To do list -->
-          <div class="todolist">
-            <div class="listitem">
-              <div class="main">
-                <input type="checkbox" class="checkbox" />
-                <p>Sample</p>
-                <i class="far fa-star fa-lg star"></i>
-                <i class="far fa-edit fa-lg pen"></i>
+            <div class="editgroup-off">
+              <div class="item editdeadline">
+                <p><i class="far fa-calendar-alt "></i>Deadline</p>
+                <input class="deadline_day" type="date" value="2018-12-15" />
+                <input class="deadline_time" type="time" />
               </div>
-              <div class="detail">
-                <span class="icon"
-                  ><i class="far fa-calendar-alt "></i>2018-12-15</span
-                >
-                <span class="icon"><i class="far fa-file "></i></span>
-                <span class="icon"><i class="far fa-comment-alt "></i></span>
-              </div>
-              <div class="itemeditgroup">
-                <div class="item editdeadline">
-                  <p><i class="far fa-calendar-alt "></i>Deadline</p>
-                  <input class="deadline_day" type="date" value="2018-12-15" />
-                  <input class="deadline_time" type="time" />
-                </div>
-                <div class="item editcomment">
-                  <p><i class="far fa-comment-alt "></i>Comment</p>
-                  <input class="comment" type="text" />
-                </div>
+              <div class="item editcomment">
+                <p><i class="far fa-comment-alt "></i>Comment</p>
+                <input class="comment" type="text" />
                 <div class="setting">
                   <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
                   <P class="save"><i class="far fa-save"></i>Save</P>
                 </div>
               </div>
             </div>
+
+            <div class="mt-4">
+              <!-- To do list -->
+              <div class="todolist">
+                <div class="listitem">
+                  <div class="main">
+                    <input type="checkbox" class="checkbox" />
+                    <p>Sample</p>
+                    <i class="far fa-star fa-lg star"></i>
+                    <i class="far fa-edit fa-lg pen"></i>
+                  </div>
+                  <div class="detail">
+                    <span class="icon"
+                      ><i class="far fa-calendar-alt "></i>2018-12-15</span
+                    >
+                    <span class="icon"><i class="far fa-file "></i></span>
+                    <span class="icon"
+                      ><i class="far fa-comment-alt "></i
+                    ></span>
+                  </div>
+                  <div class="itemeditgroup">
+                    <div class="item editdeadline">
+                      <p><i class="far fa-calendar-alt "></i>Deadline</p>
+                      <input
+                        class="deadline_day"
+                        type="date"
+                        value="2018-12-15"
+                      />
+                      <input class="deadline_time" type="time" />
+                    </div>
+                    <div class="item editcomment">
+                      <p><i class="far fa-comment-alt "></i>Comment</p>
+                      <input class="comment" type="text" />
+                    </div>
+                    <div class="setting">
+                      <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+                      <P class="save"><i class="far fa-save"></i>Save</P>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab hide">
+              <div class="todolist"></div>
+            </div>
+            <div class="tab hide">
+              <div class="todolist"></div>
+            </div>
           </div>
-        </div>
-        <div class="tab hide">
-          <div class="todolist"></div>
-        </div>
-        <div class="tab hide">
-          <div class="todolist"></div>
         </div>
         <footer class="footer">
           <div class="container">

@@ -4,9 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
     <title>UM Research Meeting Management System</title>
-
     <!-- Bootstrap CSS CDN -->
     <link
       rel="stylesheet"
@@ -31,6 +29,15 @@
       crossorigin="anonymous"
     ></script>
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+    <style>
+      #calendar {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-bottom: 20px !important;
+        width: 95vh !important;
+        height: 100% !important;
+      }
+    </style>
   </head>
 
   <body>
@@ -44,10 +51,10 @@
 
         <ul class="list-unstyled components">
           <li class="active">
-            <a href="#">Add Meeting</a>
+            <a href="#">Meeting Schedule</a>
           </li>
           <li>
-            <a href="manageMeetingSupervisor.html">Meeting Records</a>
+            <a href="manageMeetingSupervisor.html">Manage Meeting Records</a>
           </li>
           <li>
             <a href="checklistSupervisor.html">Checklist</a>
@@ -102,124 +109,148 @@
         </nav>
         <h1
           class="text-center mt-3 mb-3"
-          style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
+          style="font-family: 'Mukta', sans-serif;color: #7BABED;"
         >
-          Add Meeting
+          Meeting Schedule
         </h1>
         <!-- calendar control -->
-        <div class="row mb-5 mt-5">
-          <div class="btn-group col-md-12 col-lg-4 mb-3">
-            <button class="btn btn-primary" data-calendar-nav="prev">
-              << Prev
-            </button>
-            <button class="btn" data-calendar-nav="today">Today</button>
-            <button class="btn btn-primary" data-calendar-nav="next">
-              Next >>
-            </button>
-          </div>
-          <div class="page-header col-md-12 col-lg-4 text-center mb-3">
-            <h3></h3>
-          </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-md-12">
+            <div class="row mb-3 mt-3">
+              <div class="btn-group col-md-12 col-lg-4 mb-3">
+                <button class="btn btn-primary" data-calendar-nav="prev">
+                  << Prev
+                </button>
+                <button class="btn btn-primary" data-calendar-nav="today">
+                  Today
+                </button>
+                <button class="btn btn-primary" data-calendar-nav="next">
+                  Next >>
+                </button>
+              </div>
+              <div class="page-header col-md-12 col-lg-4 text-center mb-3">
+                <h3></h3>
+              </div>
 
-          <!-- <h3 class="col-4">March 2013</h3> -->
-
-          <div class="btn-group col-md-12 offset-lg-1 col-lg-3 mb-3">
-            <button class="btn btn-warning" data-calendar-view="year">
-              Year
-            </button>
-            <button class="btn btn-warning active" data-calendar-view="month">
-              Month
-            </button>
-            <button class="btn btn-warning" data-calendar-view="week">
-              Week
-            </button>
-            <!-- <button class="btn btn-warning" data-calendar-view="day">
-              Day
-            </button> -->
+              <div class="btn-group col-md-12 offset-lg-1 col-lg-3 mb-3">
+                <button class="btn btn-primary" data-calendar-view="year">
+                  Year
+                </button>
+                <button
+                  class="btn btn-primary active"
+                  data-calendar-view="month"
+                >
+                  Month
+                </button>
+                <button class="btn btn-primary" data-calendar-view="week">
+                  Week
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- calendar put here -->
-        <div id="calendar"></div>
+        <div class="row">
+          <div id="calendar"></div>
+        </div>
 
-        <!-- form put here -->
-        <form>
-          <div class="form-group">
-            <label for="datepicker">Date*</label>
-            <input type="date" class="form-control" id="datepicker" required />
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 col-sm-12">
+            <!-- form put here -->
+            <form>
+              <div class="form-group">
+                <label for="datepicker">Date*</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="datepicker"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="starttime">Start Time*</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  id="starttime"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="endtime">End Time*</label>
+                <input type="time" class="form-control" id="endtime" required />
+              </div>
+
+              <div class="form-group">
+                <label for="title">Title*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  placeholder="Title of Meeting"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="venue">Venue*</label>
+                <select id="venue" class="custom-select" required>
+                  <option value="">Select a venue*</option>
+                  <option value="1">MM4, FCSIT</option>
+                  <option value="2">DK2, FCSIT</option>
+                  <option value="3">DK1, FCSIT</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="notification">Notification</label>
+                <select id="notification" class="custom-select" required>
+                  <option value="0">No Notification</option>
+                  <option value="1">30 minutes before meeting</option>
+                  <option value="2">1 hour before meeting</option>
+                  <option value="3">2 hours before meeting</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  value="chinxiongwei@hotmail.com"
+                  required
+                  disabled
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="description">Descriptions</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  rows="5"
+                  style="height:100%;"
+                  placeholder="The meeting descriptions"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="guests">Add Guests</label>
+                <input type="text" class="form-control typeahead" id="guests" />
+              </div>
+              <div class="row justify-content-center">
+                <button type="submit" class="btn btn-primary">
+                  Add Meeting
+                </button>
+              </div>
+            </form>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label for="starttime">Start Time*</label>
-            <input type="time" class="form-control" id="starttime" required />
-          </div>
-
-          <div class="form-group">
-            <label for="endtime">End Time*</label>
-            <input type="time" class="form-control" id="endtime" required />
-          </div>
-
-          <div class="form-group">
-            <label for="title">Title*</label>
-            <input
-              type="text"
-              class="form-control"
-              id="title"
-              placeholder="Title of Meeting"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="venue">Venue*</label>
-            <select id="venue" class="custom-select" required>
-              <option value="">Select a venue*</option>
-              <option value="1">MM4, FCSIT</option>
-              <option value="2">DK2, FCSIT</option>
-              <option value="3">DK1, FCSIT</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="notification">Notification</label>
-            <select id="notification" class="custom-select" required>
-              <option value="0">No Notification</option>
-              <option value="1">30 minutes before meeting</option>
-              <option value="2">1 hour before meeting</option>
-              <option value="3">2 hours before meeting</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              value="chinxiongwei@hotmail.com"
-              required
-              disabled
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="description">Descriptions</label>
-            <textarea
-              class="form-control"
-              id="description"
-              rows="5"
-              style="height:100%;"
-              placeholder="The meeting descriptions"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="guests">Add Guests</label>
-            <input type="text" class="form-control typeahead" id="guests" />
-          </div>
-
-          <button type="submit" class="btn btn-info">Submit</button>
-        </form>
         <footer class="footer">
           <div class="container">
             <hr />
