@@ -45,6 +45,55 @@
     <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
   </head>
   <body>
+    <!--Delete message -->
+    <div
+      class="modal fade"
+      id="deleteAlert"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Delete Message
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this task?<br />
+            This cannot be undone.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick="remove()"
+              data-dismiss="modal"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Delete message ends -->
     <div class="wrapper">
       <!-- Sidebar Holder -->
       <nav id="sidebar">
@@ -55,10 +104,10 @@
 
         <ul class="list-unstyled components">
           <li>
-            <a href="addMeetingSupervisor.html">Add Meeting</a>
+            <a href="addMeetingSupervisor.html">Meeting Schedule</a>
           </li>
           <li>
-            <a href="manageMeetingSupervisor.html">Meeting Records</a>
+            <a href="manageMeetingSupervisor.html">Manage Meeting Records</a>
           </li>
           <li>
             <a href="checklistSupervisor.html">Checklist</a>
@@ -111,174 +160,164 @@
         </nav>
         <h1
           class="text-center mt-3 mb-3"
-          style="font-family: 'Mukta', sans-serif;color: #7BABED; font-size: 4vw;"
+          style="font-family: 'Mukta', sans-serif;color: #7BABED;"
         >
           Research Progress
         </h1>
-        <h3 class="text-center">Ang Chun Wah - ycwahwah@gmail.com</h3>
+        <h4 class="text-center">Ang Chun Wah - ycwahwah@gmail.com</h4>
         <div class="container mt-3 p-3">
           <div id="chart_div"></div>
         </div>
-        <div class="container mt-3">
-          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item">
-              <a
-                class="nav-link active"
-                id="pills-home-tab"
-                data-toggle="pill"
-                href="#pills-home"
-                role="tab"
-                aria-controls="pills-home"
-                aria-selected="true"
-                >Add Task</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                id="pills-profile-tab"
-                data-toggle="pill"
-                href="#pills-profile"
-                role="tab"
-                aria-controls="pills-profile"
-                aria-selected="false"
-                >Update Task</a
-              >
-            </li>
-          </ul>
-          <div class="tab-content" id="pills-tabContent">
-            <div
-              class="tab-pane fade show active"
-              id="pills-home"
-              role="tabpanel"
-              aria-labelledby="pills-home-tab"
-            >
-              <form>
-                <div class="form-group">
-                  <label for="taskname">Task Name: </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="taskname"
-                    placeholder="Enter task name"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="sdate">Start Date: </label>
-                  <input type="date" class="form-control" id="sdate" />
-                </div>
-
-                <div class="form-group">
-                  <label for="edate">End Date: </label>
-                  <input type="date" class="form-control" id="edate" />
-                </div>
-
-                <div class="form-group">
-                  <label for="percent">Percent Complete</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="percent"
-                    placeholder="Enter the percent"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="depend">Dependencies</label>
-                  <select
-                    class="selectpicker form-control"
-                    id="depend"
-                    multiple
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="container mt-3">
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    id="pills-home-tab"
+                    data-toggle="pill"
+                    href="#pills-home"
+                    role="tab"
+                    aria-controls="pills-home"
+                    aria-selected="true"
+                    >Add Task</a
                   >
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="add"
-                    type="button"
-                    value="Add Task"
-                  />
-                  <a href="progressSupervisor.html">
-                    <button
-                      class="btn btn-primary btn-lg float-right"
-                      type="button"
-                    >
-                      Back
-                    </button>
-                  </a>
-                </div>
-              </form>
-            </div>
-            <div
-              class="tab-pane fade"
-              id="pills-profile"
-              role="tabpanel"
-              aria-labelledby="pills-profile-tab"
-            >
-              <form>
-                <div class="form-group">
-                  <label for="taskname2">Task Name: </label>
-                  <select id="taskname2" class="custom-select" required>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="sdate2">Start Date: </label>
-                  <input type="date" class="form-control" id="sdate2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="edate2">End Date: </label>
-                  <input type="date" class="form-control" id="edate2" />
-                </div>
-
-                <div class="form-group">
-                  <label for="percent2">Percent Complete</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="percent2"
-                    placeholder="Enter the percent"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="depend2">Dependencies</label>
-                  <select
-                    class="selectpicker form-control"
-                    id="depend2"
-                    multiple
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    id="pills-profile-tab"
+                    data-toggle="pill"
+                    href="#pills-profile"
+                    role="tab"
+                    aria-controls="pills-profile"
+                    aria-selected="false"
+                    >Update Task</a
                   >
-                  </select>
-                </div>
+                </li>
+              </ul>
+              <div class="tab-content" id="pills-tabContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="pills-home"
+                  role="tabpanel"
+                  aria-labelledby="pills-home-tab"
+                >
+                  <form>
+                    <div class="form-group">
+                      <label for="taskname">Task Name: </label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="taskname"
+                        placeholder="Enter task name"
+                      />
+                    </div>
 
-                <div class="form-group">
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="update"
-                    type="button"
-                    value="Update Task"
-                  />
+                    <div class="form-group">
+                      <label for="sdate">Start Date: </label>
+                      <input type="date" class="form-control" id="sdate" />
+                    </div>
 
-                  <input
-                    class="btn btn-primary btn-lg"
-                    id="remove"
-                    type="button"
-                    value="Remove Task"
-                  />
-                  <a href="progressSupervisor.html">
-                    <button
-                      class="btn btn-primary btn-lg float-right"
-                      type="button"
-                    >
-                      Back
-                    </button>
-                  </a>
+                    <div class="form-group">
+                      <label for="edate">End Date: </label>
+                      <input type="date" class="form-control" id="edate" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="percent">Percent Complete</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="percent"
+                        placeholder="Enter the percent"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="depend">Dependencies</label>
+                      <select
+                        class="selectpicker form-control"
+                        id="depend"
+                        multiple
+                      >
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <input
+                        class="btn btn-primary"
+                        id="add"
+                        type="button"
+                        value="Add Task"
+                      />
+                    </div>
+                  </form>
                 </div>
-              </form>
+                <div
+                  class="tab-pane fade"
+                  id="pills-profile"
+                  role="tabpanel"
+                  aria-labelledby="pills-profile-tab"
+                >
+                  <form>
+                    <div class="form-group">
+                      <label for="taskname2">Task Name: </label>
+                      <select id="taskname2" class="custom-select" required>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="sdate2">Start Date: </label>
+                      <input type="date" class="form-control" id="sdate2" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="edate2">End Date: </label>
+                      <input type="date" class="form-control" id="edate2" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="percent2">Percent Complete</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="percent2"
+                        placeholder="Enter the percent"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="depend2">Dependencies</label>
+                      <select
+                        class="selectpicker form-control"
+                        id="depend2"
+                        multiple
+                      >
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <input
+                        class="btn btn-primary"
+                        id="update"
+                        type="button"
+                        value="Update Task"
+                      />
+
+                      <input
+                        class="btn btn-primary"
+                        data-toggle="modal"
+                        data-target="#deleteAlert"
+                        id="remove"
+                        type="button"
+                        value="Remove Task"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -364,6 +403,29 @@
           }
         }
       }
+      function remove() {
+        var id = $("#taskname2").val();
+        var index = data.findIndex(e => e[0] === id);
+        data.splice(index, 1);
+        for (let i = 0; i < data.length; i++) {
+          if (data[i][6] === null || data[i][6] === "") continue;
+          let dependencies = data[i][6].split(",");
+          let j = dependencies.findIndex(e => e === id);
+          if (j !== -1) dependencies.splice(j, 1);
+          data[i][6] = dependencies.join(",");
+          if (data[i][6] === "") data[i][6] = null;
+        }
+        updateChart(data);
+        updateTaskNames();
+        if ($("#taskname2").val() !== "") {
+          updateForms($("#taskname2").val());
+        }
+        $("#depend").empty();
+        data.forEach(function(item, index) {
+          $("#depend").append(`<option>${item[0]}</option>`);
+        });
+        $("#depend").selectpicker("refresh");
+      }
       $(document).ready(function() {
         // side bar function
         $("#sidebarCollapse").on("click", function() {
@@ -415,29 +477,29 @@
           updateForms(data[0][0]);
         });
 
-        $("#remove").on("click", function() {
-          var id = $("#taskname2").val();
-          var index = data.findIndex(e => e[0] === id);
-          data.splice(index, 1);
-          for (let i = 0; i < data.length; i++) {
-            if (data[i][6] === null || data[i][6] === "") continue;
-            let dependencies = data[i][6].split(",");
-            let j = dependencies.findIndex(e => e === id);
-            if (j !== -1) dependencies.splice(j, 1);
-            data[i][6] = dependencies.join(",");
-            if (data[i][6] === "") data[i][6] = null;
-          }
-          updateChart(data);
-          updateTaskNames();
-          if ($("#taskname2").val() !== "") {
-            updateForms($("#taskname2").val());
-          }
-          $("#depend").empty();
-          data.forEach(function(item, index) {
-            $("#depend").append(`<option>${item[0]}</option>`);
-          });
-          $("#depend").selectpicker("refresh");
-        });
+        // $("#remove").on("click", function() {
+        //   var id = $("#taskname2").val();
+        //   var index = data.findIndex(e => e[0] === id);
+        //   data.splice(index, 1);
+        //   for (let i = 0; i < data.length; i++) {
+        //     if (data[i][6] === null || data[i][6] === "") continue;
+        //     let dependencies = data[i][6].split(",");
+        //     let j = dependencies.findIndex(e => e === id);
+        //     if (j !== -1) dependencies.splice(j, 1);
+        //     data[i][6] = dependencies.join(",");
+        //     if (data[i][6] === "") data[i][6] = null;
+        //   }
+        //   updateChart(data);
+        //   updateTaskNames();
+        //   if ($("#taskname2").val() !== "") {
+        //     updateForms($("#taskname2").val());
+        //   }
+        //   $("#depend").empty();
+        //   data.forEach(function(item, index) {
+        //     $("#depend").append(`<option>${item[0]}</option>`);
+        //   });
+        //   $("#depend").selectpicker("refresh");
+        // });
       });
     </script>
   </body>
