@@ -550,19 +550,25 @@
 
 // custom-code
 var $input = $(".typeahead");
-$input.typeahead({
-  source: [
-    { id: "1", name: "kitten07@gmail.com" },
-    { id: "2", name: "super01@gmail.com" },
-    { id: "3", name: "primaryschoolkid@gmail.com" },
-    { id: "4", name: "giant@gmail.com" },
-    { id: "5", name: "tiny@gmail.com" },
-    { id: "6", name: "pfff@gmail.com" },
-    { id: "7", name: "jiaxiong8169@gmail.com" },
-    { id: "8", name: "umrmms@gmail.com" },
-    { id: "9", name: "umrmms2@gmail.com" }
-  ],
-  autoSelect: true
+$.ajax({
+  type: "POST",
+  url: "/um-rmms/php/addMeeting/getEmails.php",
+  data: {},
+  cache: false,
+  success: function(data) {
+    data = JSON.parse(data);
+    let formatted_data = [];
+    $.each(data, function(index, value) {
+      formatted_data.push({
+        id: index,
+        name: value
+      });
+    });
+    $input.typeahead({
+      source: formatted_data,
+      autoSelect: true
+    });
+  }
 });
 $input.change(function() {
   var current = $input.typeahead("getActive");

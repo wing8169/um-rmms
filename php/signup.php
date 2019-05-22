@@ -21,11 +21,13 @@ if (isset($_POST['fullname']) && isset($_POST['email']) && isset($_POST['psw']) 
     $stmt = $conn->prepare("INSERT INTO user (email, password, full_name, role) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $_POST['email'], $pw, $_POST['fullname'], $_POST['role']);
     $stmt->execute();
+    $id = $stmt->insert_id;
     $stmt->close();
     // signed up, setup session
     $_SESSION['user'] = $_POST['email'];
     $_SESSION['fullname'] = $_POST['fullname'];
     $_SESSION['role'] = $_POST['role'];
+    $_SESSION['id'] = $id;
     // send full name back
     echo json_encode(array(
         "status" => "success",

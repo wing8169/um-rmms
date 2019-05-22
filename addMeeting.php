@@ -142,9 +142,9 @@ if (!isset($_SESSION['user'])) {
               <label for="venue">Venue*</label>
               <select id="venue" class="custom-select" required>
                 <option value="">Select a venue*</option>
-                <option value="1">MM4, FCSIT</option>
-                <option value="2">DK2, FCSIT</option>
-                <option value="3">DK1, FCSIT</option>
+                <option value="MM4, FCSIT">MM4, FCSIT</option>
+                <option value="DK2, FCSIT">DK2, FCSIT</option>
+                <option value="DK1, FCSIT">DK1, FCSIT</option>
               </select>
             </div>
 
@@ -168,7 +168,7 @@ if (!isset($_SESSION['user'])) {
               <input type="text" class="form-control typeahead" id="guests" />
             </div>
             <div class="row justify-content-center">
-              <button type="submit" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" id="addmeeting">
                 Add Meeting
               </button>
             </div>
@@ -237,10 +237,49 @@ if (!isset($_SESSION['user'])) {
           }
         });
       });
+      $("#addmeeting").click(function() {
+        if ($("#datepicker").val() == "" || $("#starttime").val() == "" || $("#endtime").val() == "" || $("#title").val() == "" || $("#venue").val() == "") {
+          alert("Please fill in all the required fields.");
+          return;
+        }
+        let starttime = $("#datepicker").val() + " " + $("#starttime").val() + ":00";
+        console.log(starttime);
+        let endtime = $("#datepicker").val() + " " + $("#endtime").val() + ":00";
+        let title = $("#title").val();
+        let venue = $("#venue").val();
+        let notification = $("#notification").val();
+        let description = $("#description").val();
+        let guests = $("#guests").val();
+        let data = {
+          "start_time": starttime,
+          "end_time": endtime,
+          "title": title,
+          "venue": venue,
+          "notification": notification,
+          "description": description,
+          "guests": guests,
+        };
+        // send request
+        $.ajax({
+          type: "POST",
+          url: "php/addMeeting/addMeeting.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            console.log(data);
+            data = JSON.parse(data);
+            alert(data["msg"]);
+            setTimeout(function() {
+              // hard reload
+              location.reload(true);
+            }, 1000);
+          }
+        });
+      });
     });
   </script>
   <script src="js/addMeeting/app.js"></script>
-  <script src="js/addMeeting/autocomplete.js"></script>
+  <script src="js/autocomplete.js"></script>
 </body>
 
 </html>

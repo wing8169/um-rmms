@@ -18,6 +18,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         $pw = $row['password'];
         $fullname = $row['full_name'];
         $role = $row['role'];
+        $id = $row['ID'];
         $stmt->close();
         // verify password
         if (password_verify($_POST['password'], $pw)) {
@@ -25,6 +26,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $_SESSION["user"] = $_POST['email'];
             $_SESSION["fullname"] = $fullname;
             $_SESSION["role"] = $role;
+            $_SESSION["id"] = $id;
             // reply success message
             echo json_encode(array(
                 "status" => "success",

@@ -211,7 +211,7 @@ if (!isset($_SESSION['user'])) {
       });
     });
   </script>
-  <script src="js/reviewStudent/autocomplete.js"></script>
+  <script src="js/autocomplete.js"></script>
 </body>
 
 </html>
