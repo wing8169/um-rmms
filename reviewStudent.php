@@ -111,55 +111,13 @@ if (!isset($_SESSION['user'])) {
               <th>ID</th>
               <th>Report Name</th>
               <th>Submission Date</th>
-              <th>Reviewed by</th>
+              <th>Reviewer</th>
               <th>Status</th>
-              <th>Comments</th>
+              <th>Reviews</th>
               <th>Attachments</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Meeting report on March 31</td>
-              <td>2019-03-31</td>
-              <td></td>
-              <td>Pending</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Meeting report on March 29</td>
-              <td>2019-03-29</td>
-              <td>Dr Chiam Yin Kia</td>
-              <td>Reviewed</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Cupiditate, ad eligendi optio magnam praesentium, corrupti
-                alias aut odit necessitatibus nostrum odio voluptatem voluptas
-                quidem quasi veniam illum laboriosam voluptate dignissimos.
-              </td>
-              <td>
-                <a target="_blank" href="Web Programming Phase1.pdf">Click to download</a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Meeting report on March 28</td>
-              <td>2019-03-28</td>
-              <td>Dr Chiam Yin Kia</td>
-              <td>Reviewed</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Cupiditate, ad eligendi optio magnam praesentium, corrupti
-                alias aut odit necessitatibus nostrum odio voluptatem voluptas
-                quidem quasi veniam illum laboriosam voluptate dignissimos.
-              </td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="reporttablebody"></tbody>
         </table>
       </div>
 
@@ -191,6 +149,34 @@ if (!isset($_SESSION['user'])) {
   <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      // update table
+      $.ajax({
+        type: "POST",
+        url: "php/reviewStudent/updateTable.php",
+        data: {},
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          $.each(data, function(index, value) {
+            $("#reporttablebody").append(
+              `<tr>
+              <td>${value["id"]}</td>
+              <td>${value["name"]}</td>
+              <td>${value["submission_date"]}</td>
+              <td>${value["rec_name"]}</td>
+              <td>${value["status"]}</td>
+              <td>${value["review"]}</td>
+              <td>
+                <a href="${value["file_path"]}" target="_blank">Click to download report</a>
+                <br>
+                <br>
+                <a href="${value["review_path"] == ''? '#' : value["review_path"]}" target="${value["review_path"] == ''? '_self' : '_blank'}">Click to download review report</a>
+              </td>
+            </tr>`
+            );
+          });
+        }
+      });
       $('#fileSubmit').on('change', function() {
         var file = this.files[0];
         // Also see .name, .type
@@ -223,46 +209,12 @@ if (!isset($_SESSION['user'])) {
           contentType: false,
           processData: false,
           success: function(data) {
-            console.log(data);
+            data = JSON.parse(data);
+            alert(data['msg']);
+            location.reload();
           }
         });
-      })
-      // $("#submitreport").click(function() {
-      //   console.log($("#fileSubmit")[0]);
-      //   let email = $("#emailAddr").val();
-      //   let reportname = $("#reportname").val();
-      //   // let filesubmit = new FormData($("form")[2]);
-      //   let filesubmit = new FormData($("#fileSubmit"));
-      //   let data2 = {
-      //     "email": email,
-      //     "reportname": reportname,
-      //     // "file": filesubmit,
-      //   };
-      //   // send request
-      //   $.ajax({
-      //     type: "POST",
-      //     url: "php/reviewStudent/studentSubmit.php",
-      //     data: filesubmit,
-      //     cache: false,
-      //     contentType: false,
-      //     processData: false,
-      //     xhr: function() {
-      //       var myXhr = $.ajaxSettings.xhr();
-      //       if (myXhr.upload) {
-      //         // For handling the progress of the upload
-      //         myXhr.upload.addEventListener('progress', function(e) {
-      //           if (e.lengthComputable) {
-      //             console.log(e);
-      //           }
-      //         }, false);
-      //       }
-      //       return myXhr;
-      //     },
-      //     success: function(data) {
-      //       console.log(data);
-      //     }
-      //   });
-      // });
+      });
     });
   </script>
   <script src="js/autocomplete.js"></script>

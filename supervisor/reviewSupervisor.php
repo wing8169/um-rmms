@@ -85,34 +85,29 @@ if (!isset($_SESSION['user'])) {
       </h1>
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-12">
-          <form>
+          <form novalidate method="POST" enctype="multipart/form-data" id="form">
             <div class="form-group">
               <label for="reportID">*Report ID:</label>
-              <select id="reportID" class="custom-select" required>
-                <option value="">Select the ID of report to be reviewed</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
+              <select name="reportID" id="reportID" class="custom-select" required></select>
             </div>
             <div class="form-group">
               <label for="setstatus">Set status:</label>
-              <select id="setstatus" class="custom-select" required>
-                <option value="">Status of report</option>
-                <option value="1">Pending</option>
-                <option value="2">Reviewed</option>
+              <select name="setstatus" id="setstatus" class="custom-select" required>
+                <option value="">Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Reviewed">Reviewed</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="reason">Review of report: </label>
-              <textarea class="form-control" id="reason" rows="5" style="height:100%;" placeholder="Comments on the report"></textarea>
+              <label for="reason">Reviews: </label>
+              <textarea name="reason" class="form-control" id="reason" rows="5" style="height:100%;" placeholder="Comments on the report"></textarea>
             </div>
             <div class="form-group">
               <label for="fileSubmit">Attachment: </label>
-              <input type="file" id="fileSubmit" class="form-control" accept="image/*" />
+              <input name="fileSubmit" type="file" id="fileSubmit" class="form-control" accept=".doc,.docx,.pdf" />
             </div>
             <div class="mt-3">
-              <button type="submit" class="btn btn-primary" required>
+              <button type="submit" class="btn btn-primary" id="submitreview">
                 Upload
               </button>
             </div>
@@ -126,92 +121,11 @@ if (!isset($_SESSION['user'])) {
               <th>Submission Date</th>
               <th>Submitted by</th>
               <th>Status</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Meeting report on March 31</td>
-              <td>2019-03-31</td>
-              <td>Nobita Kun</td>
-              <td>Pending</td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Meeting report on March 29</td>
-              <td>2019-03-29</td>
-              <td>Nobita Kun</td>
-              <td>Reviewed</td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Meeting report on March 28</td>
-              <td>2019-03-28</td>
-              <td>Nobita Kun</td>
-              <td>Reviewed</td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <h3 class="text-center mt-5">Review history</h3>
-        <table class="table mt-5 ml-5 mr-5">
-          <thead class="thead-dark">
-            <tr>
-              <th>ID</th>
-              <th>Report Name</th>
-              <th>Submission Date</th>
-              <th>Submitted by</th>
-              <th>Status</th>
-              <th>Comments</th>
+              <th>Reviews</th>
               <th>Attachments</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Meeting report on March 31</td>
-              <td>2019-03-31</td>
-              <td>Nobita Kun</td>
-              <td>Pending</td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Meeting report on March 29</td>
-              <td>2019-03-29</td>
-              <td>Nobita Kun</td>
-              <td>Reviewed</td>
-              <td>
-                Lorem ipsum
-              </td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Meeting report on March 28</td>
-              <td>2019-03-28</td>
-              <td>Nobita Kun</td>
-              <td>Reviewed</td>
-              <td>
-                Lorem ipsum
-              </td>
-              <td>
-                <a href="#">Click to download</a>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="reporttablebody"></tbody>
         </table>
       </div>
 
@@ -243,6 +157,53 @@ if (!isset($_SESSION['user'])) {
   <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      // update table
+      $.ajax({
+        type: "POST",
+        url: "../php/reviewSupervisor/updateTable.php",
+        data: {},
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          $.each(data, function(index, value) {
+            $("#reportID").append(
+              `<option value="${value['id']}">${value['id']}</option>`
+            );
+            $("#reporttablebody").append(
+              `<tr>
+              <td>${value["id"]}</td>
+              <td>${value["name"]}</td>
+              <td>${value["submission_date"]}</td>
+              <td>${value["sender_name"]}</td>
+              <td>${value["status"]}</td>
+              <td>${value["review"]}</td>
+              <td>
+                <a href="../${value["file_path"]}" target="_blank">Click to download report</a>
+                <br>
+                <br>
+                <a href="${value["review_path"] == ''? '#' : '../'+value["review_path"]}" target="${value["review_path"] == ''? '_self' : '_blank'}">Click to download review report</a>
+              </td>
+            </tr>`
+            );
+          });
+        }
+      });
+      $("#form").on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "POST",
+          url: "../php/reviewSupervisor/supervisorReview.php",
+          data: new FormData(this),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            alert(data['msg']);
+            location.reload();
+          }
+        });
+      });
       $("#sidebarCollapse").on("click", function() {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
