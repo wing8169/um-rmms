@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['user'])) {
   header("Location: /um-rmms");
 }
-if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
+if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !isset($_SESSION['progressname']))) {
   header("Location: supervisor/progressSupervisor.php");
 }
 ?>
@@ -105,7 +105,7 @@ if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
         Research Progress
       </h1>
       <?php
-      if ($_SESSION['role'] == 'supervisor') echo '<h4 class="text-center">' . $_SESSION['progress'] . '</h4>'
+      if ($_SESSION['role'] == 'supervisor') echo '<h4 class="text-center">' . $_SESSION['progressname'] . '</h4>'
       ?>
       <div class="container mt-3 p-3">
         <div id="chart_div"></div>
@@ -123,7 +123,7 @@ if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
             </ul>
             <div class="tab-content" id="pills-tabContent">
               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <form>
+                <form novalidate method="POST">
                   <div class="form-group">
                     <label for="taskname">Task Name: </label>
                     <input type="text" class="form-control" id="taskname" placeholder="Enter task name" />
@@ -152,11 +152,16 @@ if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
 
                   <div class="form-group">
                     <input class="btn btn-primary" id="add" type="button" value="Add Task" />
+                    <?php
+                    if ($_SESSION['role'] == "supervisor") {
+                      echo '<input class="btn btn-primary float-right" id="back1" type="button" value="Back" />';
+                    }
+                    ?>
                   </div>
                 </form>
               </div>
               <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <form>
+                <form novalidate method="POST">
                   <div class="form-group">
                     <label for="taskname2">Task Name: </label>
                     <select id="taskname2" class="custom-select" required>
@@ -188,6 +193,12 @@ if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
                     <input class="btn btn-primary" id="update" type="button" value="Update Task" />
 
                     <input class="btn btn-primary" data-toggle="modal" data-target="#deleteAlert" id="remove" type="button" value="Remove Task" />
+
+                    <?php
+                    if ($_SESSION['role'] == "supervisor") {
+                      echo '<input class="btn btn-primary float-right" id="back2" type="button" value="Back" />';
+                    }
+                    ?>
                   </div>
                 </form>
               </div>
@@ -286,6 +297,31 @@ if ($_SESSION['role'] == 'supervisor' && !isset($_SESSION['progress'])) {
       $("#depend").selectpicker("refresh");
     }
     $(document).ready(function() {
+      // supervisor back
+      $("#back1").click(function() {
+        // send request
+        $.ajax({
+          type: "POST",
+          url: "php/progress/supervisorBack.php",
+          data: {},
+          cache: false,
+          success: function(data) {
+            location.reload(true);
+          }
+        });
+      });
+      $("#back2").click(function() {
+        // send request
+        $.ajax({
+          type: "POST",
+          url: "php/progress/supervisorBack.php",
+          data: {},
+          cache: false,
+          success: function(data) {
+            location.reload(true);
+          }
+        });
+      });
       // side bar function
       $("#sidebarCollapse").on("click", function() {
         $("#sidebar").toggleClass("active");

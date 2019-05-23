@@ -80,62 +80,7 @@ if (!isset($_SESSION['user'])) {
         Research Progress
       </h1>
       <h3 class="mb-4 text-center">Students</h3>
-      <div class="row justify-content-center">
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Ang Chun Wah</h5>
-            <p class="card-text">
-              ycwahwah@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Aidy</h5>
-            <p class="card-text">
-              aidy@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Cheng Kean Boon</h5>
-            <p class="card-text">
-              kbryant@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Chin Jia Xiong</h5>
-            <p class="card-text">
-              pffffxiongxiong@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Ong Pei Ling</h5>
-            <p class="card-text">
-              peiling@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-        <div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Chor Choon Heng</h5>
-            <p class="card-text">
-              chorvv@gmail.com
-            </p>
-            <a href="progress.html" class="btn btn-primary">View Progress</a>
-          </div>
-        </div>
-      </div>
+      <div class="row justify-content-center" id="cardcontainer"></div>
 
       <footer class="footer">
         <div class="container">
@@ -170,6 +115,44 @@ if (!isset($_SESSION['user'])) {
 
   <script type="text/javascript">
     $(document).ready(function() {
+      // update cards
+      $.ajax({
+        type: "POST",
+        url: "../php/progress/selectCards.php",
+        data: {},
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          $.each(data, function(index, value) {
+            $("#cardcontainer").append(
+              `<div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">${value['full_name']}</h5>
+                  <p class="card-text">
+                    ${value['email']}
+                  </p>
+                  <a href="#" class="btn btn-primary" id="${value['id']}">View Progress</a>
+                </div>
+              </div>`
+            );
+            $(`#${value['id']}`).click(function() {
+              // set session
+              $.ajax({
+                type: "POST",
+                url: "../php/progress/supervisorSetSession.php",
+                data: {
+                  "id": value['id'],
+                  "full_name": value['full_name']
+                },
+                cache: false,
+                success: function(data) {
+                  location.href = "../progress.php";
+                }
+              });
+            });
+          });
+        }
+      });
       $("#logout").click(function() {
         // send request
         $.ajax({
