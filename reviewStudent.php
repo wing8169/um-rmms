@@ -84,28 +84,28 @@ if (!isset($_SESSION['user'])) {
       </h1>
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-12">
-          <form>
+          <form novalidate method="POST" enctype="multipart/form-data" id="form">
             <div class="form-group">
-              <label for="exampleInputEmail1">*Email address:</label>
-              <input type="email" class="form-control typeahead" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email of recipient" />
+              <label for="emailAddr">*Email address:</label>
+              <input name="emailAddr" type="email" class="form-control typeahead" id="emailAddr" aria-describedby="emailHelp" placeholder="Enter email of recipient" />
               <small id="emailHelp" class="form-text text-muted" required>Recipient email</small>
             </div>
             <div class="form-group">
               <label for="reportname">*Report Name:</label>
-              <input type="text" class="form-control" id="reportname" placeholder="Name of report" />
+              <input name="reportname" type="text" class="form-control" id="reportname" placeholder="Name of report" />
             </div>
             <div class="form-group">
               <label for="fileSubmit">*Please Upload Your Report:</label>
-              <input type="file" id="fileSubmit" class="form-control" accept="image/*" />
+              <input name="fileSubmit" type="file" id="fileSubmit" class="form-control" accept=".doc,.docx,.pdf" />
             </div>
             <div class="mt-3">
-              <button type="submit" class="btn btn-primary" required>
+              <button type="submit" class="btn btn-primary" required id="submitreport">
                 Submit
               </button>
             </div>
           </form>
         </div>
-        <table class="table mt-5 ml-5 mr-5">
+        <table class="table mt-5 ml-5 mr-5" id="reporttable">
           <thead class="thead-dark">
             <tr>
               <th>ID</th>
@@ -140,7 +140,7 @@ if (!isset($_SESSION['user'])) {
                 quidem quasi veniam illum laboriosam voluptate dignissimos.
               </td>
               <td>
-                <a href="#">Click to download</a>
+                <a target="_blank" href="Web Programming Phase1.pdf">Click to download</a>
               </td>
             </tr>
             <tr>
@@ -191,6 +191,10 @@ if (!isset($_SESSION['user'])) {
   <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      $('#fileSubmit').on('change', function() {
+        var file = this.files[0];
+        // Also see .name, .type
+      });
       $("#sidebarCollapse").on("click", function() {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
@@ -209,6 +213,56 @@ if (!isset($_SESSION['user'])) {
           }
         });
       });
+      $("#form").on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "POST",
+          url: "php/reviewStudent/studentSubmit.php",
+          data: new FormData(this),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(data) {
+            console.log(data);
+          }
+        });
+      })
+      // $("#submitreport").click(function() {
+      //   console.log($("#fileSubmit")[0]);
+      //   let email = $("#emailAddr").val();
+      //   let reportname = $("#reportname").val();
+      //   // let filesubmit = new FormData($("form")[2]);
+      //   let filesubmit = new FormData($("#fileSubmit"));
+      //   let data2 = {
+      //     "email": email,
+      //     "reportname": reportname,
+      //     // "file": filesubmit,
+      //   };
+      //   // send request
+      //   $.ajax({
+      //     type: "POST",
+      //     url: "php/reviewStudent/studentSubmit.php",
+      //     data: filesubmit,
+      //     cache: false,
+      //     contentType: false,
+      //     processData: false,
+      //     xhr: function() {
+      //       var myXhr = $.ajaxSettings.xhr();
+      //       if (myXhr.upload) {
+      //         // For handling the progress of the upload
+      //         myXhr.upload.addEventListener('progress', function(e) {
+      //           if (e.lengthComputable) {
+      //             console.log(e);
+      //           }
+      //         }, false);
+      //       }
+      //       return myXhr;
+      //     },
+      //     success: function(data) {
+      //       console.log(data);
+      //     }
+      //   });
+      // });
     });
   </script>
   <script src="js/autocomplete.js"></script>
