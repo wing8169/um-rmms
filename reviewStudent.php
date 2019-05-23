@@ -24,6 +24,7 @@ if (!isset($_SESSION['user'])) {
   <!-- icon -->
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous" />
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.ico">
   <style>
     tbody {
       display: block;

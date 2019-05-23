@@ -19,6 +19,7 @@ if (isset($_SESSION['user'])) {
 
   <link href="//fonts.googleapis.com/css?family=Frank+Ruhl+Libre:900" rel="stylesheet" />
   <link href="//fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.ico">
 
   <style>
     body {

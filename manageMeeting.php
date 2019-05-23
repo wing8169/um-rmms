@@ -26,6 +26,7 @@ if (!isset($_SESSION['user'])) {
   <!-- icon -->
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/manageMeeting/meetingrecord.css" />
+  <link rel="shortcut icon" href="favicon.ico">
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
 </head>
 

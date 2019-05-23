@@ -31,6 +31,7 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css" />
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.ico">
 </head>
 
 <body>

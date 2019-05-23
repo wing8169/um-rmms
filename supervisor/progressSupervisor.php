@@ -28,6 +28,7 @@ if (!isset($_SESSION['user'])) {
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous" />
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap-select@1.13.7/dist/css/bootstrap-select.min.css" />
+  <link rel="shortcut icon" href="../favicon.ico">
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
   <style>
     .card {
