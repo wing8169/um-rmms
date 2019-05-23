@@ -1,35 +1,4 @@
-// Tabs
-
-// const topnav = document.querySelectorAll(".topnav .item");
 const tab = document.querySelectorAll(".tab");
-
-// topnav.forEach(item => {
-//   item.addEventListener("click", addactive);
-//   item.addEventListener("click", tabchange);
-//   // Current page
-//   function addactive() {
-//     topnav.forEach(item => {
-//       if (item.classList.contains("active")) {
-//         item.classList.remove("active");
-//       }
-//     });
-//     item.classList.add("active");
-//   }
-//   // Form
-//   tabchange();
-// });
-// function tabchange() {
-//   for (let i = 0; i < topnav.length; i++) {
-//     if (topnav[i].classList.contains("active")) {
-//       tab.forEach(tab => {
-//         tab.classList.add("hide");
-//         // console.log(tab);
-//       });
-//       tab[i].classList.remove("hide");
-//       // console.log(tab[1]);
-//     }
-//   }
-// }
 
 // Add task-----------------
 let addtask = document.getElementsByClassName("addtask")[0];
@@ -52,7 +21,6 @@ function post() {
   edit_deadline_day.value = deadline_day.value;
   edit_deadline_time.value = deadline_time.value;
   edit_comment.value = comment.value;
-  // console.log(taskcontent);
   let newitem = `
         <div class="listitem ">
             <div class="main">
@@ -110,8 +78,7 @@ function post() {
 //Priority
 let listitem = document.getElementsByClassName("listitem");
 let star = document.getElementsByClassName("star");
-// console.log(listitem);
-// console.log(star);
+
 function updata() {
   for (let i = 0; i < star.length; i++) {
     star[i].addEventListener("click", important);
@@ -138,42 +105,15 @@ addtask.addEventListener("focus", open);
 function open() {
   editgroup.classList.remove("editgroup-off");
   editgroup.classList.add("editgroup-on");
-  //   if (topnav[0].classList.contains("active")) {
-  //     editgroup.classList.remove("editgroup-off");
-  //     editgroup.classList.add("editgroup-on");
-  //   }
-  //Click on other pages to go back to the first page and expand
-  //   else if (
-  //     topnav[1].classList.contains("active") ||
-  //     topnav[2].classList.contains("active")
-  //   ) {
-  //     topnav[1].classList.remove("active");
-  //     topnav[2].classList.remove("active");
-  //     topnav[0].classList.add("active");
-  //     tabchange();
-  //     editgroup.classList.remove("editgroup-off");
-  //     editgroup.classList.add("editgroup-on");
-  //   }
   // Click X to close expand
   cancel.addEventListener("click", () => {
     editgroup.classList.remove("editgroup-on");
     editgroup.classList.add("editgroup-off");
   });
-  // When you expand the state, other pages will shrink
-  //   topnav[1].addEventListener("click", () => {
-  //     editgroup.classList.remove("editgroup-on");
-  //     editgroup.classList.add("editgroup-off");
-  //   });
-  //   topnav[2].addEventListener("click", () => {
-  //     editgroup.classList.remove("editgroup-on");
-  //     editgroup.classList.add("editgroup-off");
-  //   });
 }
 
 //Modify
 let itemeditgroup = document.getElementsByClassName("itemeditgroup");
-// let saveedit = document.getElementsByClassName('itemeditgroup')[0].getElementsByClassName('save');
-// let canceledit = document.getElementsByClassName('itemeditgroup')[0].getElementsByClassName('cancel');
 
 let edit_deadline_day = document.querySelector(".itemeditgroup .deadline_day");
 let edit_deadline_time = document.querySelector(

@@ -75,64 +75,29 @@ if (!isset($_SESSION['user'])) {
           <!-- Add new item -->
           <div class="row justify-content-center">
             <div class="add col-xs-12 col-md-6 mb-3">
-              <input class="addtask form-control" id="addtask" type="text" placeholder=" + Add Task" />
+              <input name="addtask" class="addtask form-control" id="addtask" type="text" placeholder=" + Add Task" />
             </div>
           </div>
 
           <div class="editgroup-off">
             <div class="item editdeadline">
               <p><i class="far fa-calendar-alt "></i>Deadline</p>
-              <input class="deadline_day" type="date" value="2018-12-15" />
-              <input class="deadline_time" type="time" />
+              <input class="deadline_day" type="date" id="deadlinedate" />
+              <input class="deadline_time" type="time" id="deadlinetime" />
             </div>
             <div class="item editcomment">
               <p><i class="far fa-comment-alt "></i>Comment</p>
-              <input class="comment" type="text" />
+              <input class="comment" type="text" id="comment" />
               <div class="setting">
                 <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
-                <P class="save"><i class="far fa-save"></i>Save</P>
+                <P class="save" id="savelist"><i class="far fa-save"></i>Save</P>
               </div>
             </div>
           </div>
 
           <div class="mt-4">
             <!-- To do list -->
-            <div class="todolist">
-              <div class="listitem">
-                <div class="main">
-                  <input type="checkbox" class="checkbox" />
-                  <p>Sample</p>
-                  <i class="far fa-star fa-lg star"></i>
-                  <i class="far fa-edit fa-lg pen"></i>
-                </div>
-                <div class="detail">
-                  <span class="icon"><i class="far fa-calendar-alt "></i>2018-12-15</span>
-                  <span class="icon"><i class="far fa-file "></i></span>
-                  <span class="icon"><i class="far fa-comment-alt "></i></span>
-                </div>
-                <div class="itemeditgroup">
-                  <div class="item editdeadline">
-                    <p><i class="far fa-calendar-alt "></i>Deadline</p>
-                    <input class="deadline_day" type="date" value="2018-12-15" />
-                    <input class="deadline_time" type="time" />
-                  </div>
-                  <div class="item editcomment">
-                    <p><i class="far fa-comment-alt "></i>Comment</p>
-                    <input class="comment" type="text" />
-                  </div>
-                  <div class="setting">
-                    <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
-                    <P class="save"><i class="far fa-save"></i>Save</P>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tab hide">
-            <div class="todolist"></div>
-          </div>
-          <div class="tab hide">
-            <div class="todolist"></div>
+            <div class="todolist" id="todolist"></div>
           </div>
         </div>
       </div>
@@ -162,9 +127,109 @@ if (!isset($_SESSION['user'])) {
   <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <!-- Bootstrap JS -->
   <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <script src="js/checklist/index.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
+      // update table
+      $.ajax({
+        type: "POST",
+        url: "php/checklist/selectList.php",
+        data: {},
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          $.each(data, function(index, value) {
+            $("#todolist").append(
+              `<div class="${value['favourite']==1?"listitem important":"listitem"}">
+                <div class="main">
+                  <input type="checkbox" class="checkbox" id="${value["id"] + "checkbox"}"/>
+                  <p>${value["title"]}</p>
+                  <i class="${value['favourite']==1?"far fa-star fa-lg star":"far fa-star fa-lg star"}" id="${value['id']}fav"></i>
+                  <i class="far fa-edit fa-lg pen"></i>
+                </div>
+                <div class="detail">
+                  <span class="icon"><i class="far fa-calendar-alt "></i>${value["date_str"]}</span>
+                  <span class="icon"><i class="far fa-file "></i></span>
+                  <span class="icon"><i class="far fa-comment-alt "></i></span>
+                </div>
+                <div class="itemeditgroup">
+                  <div class="item editdeadline">
+                    <p><i class="far fa-calendar-alt "></i>Deadline</p>
+                    <input class="deadline_day" type="date" id="${value["id"] + "date"}" value="${value["date_str"]}" />
+                    <input class="deadline_time" type="time" id="${value["id"] + "time"}" value="${value["time_str"]}" />
+                  </div>
+                  <div class="item editcomment">
+                    <p><i class="far fa-comment-alt "></i>Comment</p>
+                    <input class="comment" id="${value["id"] + "comment"}" type="text" value="${value["comment"]}" />
+                  </div>
+                  <div class="setting">
+                    <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+                    <P class="save" id="${value["id"] + "save"}"><i class="far fa-save"></i>Save</P>
+                  </div>
+                </div>
+              </div>`
+            );
+            if (value['checked'] == 1) {
+              $(`#${value['id']}checkbox`).prop("checked", true);
+            }
+            $(`#${value['id']}checkbox`).change(function() {
+              let checked = this.checked ? 1 : 0;
+              // send request
+              $.ajax({
+                type: "POST",
+                url: "php/checklist/checkboxChange.php",
+                data: {
+                  "checked": checked,
+                  "id": value['id'],
+                },
+                cache: false,
+                success: function(data) {}
+              });
+            });
+            $(`#${value['id']}save`).click(function() {
+              let deadline = $(`#${value['id']}date`).val() + " " + $(`#${value['id']}time`).val() + ":00";
+              let comment = $(`#${value['id']}comment`).val();
+              // send request
+              $.ajax({
+                type: "POST",
+                url: "php/checklist/updateList.php",
+                data: {
+                  "deadline": deadline,
+                  "comment": comment,
+                  "id": value['id'],
+                },
+                cache: false,
+                success: function(data) {
+                  location.reload(true);
+                }
+              });
+            });
+            $(`#${value['id']}fav`).click(function() {
+              let favourite = $(`#${value['id']}fav`).hasClass("fas") ? 0 : 1;
+              // send request
+              $.ajax({
+                type: "POST",
+                url: "php/checklist/favChange.php",
+                data: {
+                  "favourite": favourite,
+                  "id": value['id'],
+                },
+                cache: false,
+                success: function(data) {}
+              });
+            });
+            if (value['favourite'] == 1) {
+              setTimeout(() => {
+                $(`#${value['id']}fav`).addClass("fas");
+                $(`#${value['id']}`).addClass("important");
+              }, 500);
+            }
+          });
+          var script = document.createElement("script");
+          script.src = "js/checklist/index.js";
+          script.type = "text/javascript";
+          document.getElementsByTagName("head")[0].appendChild(script);
+        }
+      });
       $("#sidebarCollapse").on("click", function() {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
@@ -180,6 +245,27 @@ if (!isset($_SESSION['user'])) {
             if (data == "success") {
               location.href = "/um-rmms";
             }
+          }
+        });
+      });
+      // insert new list
+      $("#savelist").click(function() {
+        // get data
+        let title = $("#addtask").val();
+        let deadlinedate = $("#deadlinedate").val() + " " + $("#deadlinetime").val() + ":00";
+        let comment = $("#comment").val();
+        // send request
+        $.ajax({
+          type: "POST",
+          url: "php/checklist/insertList.php",
+          data: {
+            "title": title,
+            "deadlinedate": deadlinedate,
+            "comment": comment,
+          },
+          cache: false,
+          success: function(data) {
+            location.reload(true);
           }
         });
       });
