@@ -88,9 +88,12 @@ if (!isset($_SESSION['user'])) {
           <div class="form-group">
             <input id="email" type="text" placeholder="Enter email" name="email" class="form-control" required />
             <br>
-            <div class="row justify-content-center">
-              <button id="signin" type="button" class="btn btn-primary col-4">
+            <div class="row justify-content-around">
+              <button id="addstudent" type="button" class="btn btn-primary col-4">
                 Add Student
+              </button>
+              <button id="removestudent" type="button" class="btn btn-primary col-5">
+                Remove Student
               </button>
             </div>
         </form>
@@ -186,7 +189,51 @@ if (!isset($_SESSION['user'])) {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
       });
-    });
+      //add student under supervisor
+      $("#addstudent").click(function() {
+        let data = {
+          "email": $("#email").val(),
+        }
+        $.ajax({
+          type: "POST",
+          url: "../php/progress/addStudent.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            if (data["status"] === "success") {
+              location.reload();
+              alert(data['msg']);
+            } else {
+              alert(data['msg']);
+            }
+          }
+        });
+      });
+
+      //remove student under supervisor
+      $("#removestudent").click(function() {
+        let data = {
+          "email": $("#email").val(),
+        }
+        $.ajax({
+          type: "POST",
+          url: "../php/progress/removeStudent.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            if (data["status"] === "success") {
+              location.reload();
+              alert(data['msg']);
+            } else {
+              alert(data['msg']);
+            }
+          }
+        });
+      })
+
+    })
   </script>
 </body>
 

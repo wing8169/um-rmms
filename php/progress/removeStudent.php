@@ -16,31 +16,40 @@ if (isset($_POST['email'])) {
             "msg" => "Email is not in database.",
         )));
     }
-    // check if email is added already
+    // check if email has been added
     $stmt = $conn->prepare("SELECT COUNT(*) FROM student WHERE user_id=? AND student_id IN (SELECT ID FROM user WHERE email=?)");
     $stmt->bind_param("is", $id, $_POST['email']);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_all();
-    if ($row[0][0] != 0) {
+    if ($row[0][0] == 0) {
         exit(json_encode(array(
             "status" => "fail",
-            "msg" => "The email has already been added.",
+            "msg" => "Email has no yet been added.",
         )));
     }
-    // add new record to database
-    $stmt = $conn->prepare("INSERT INTO student (student_id, user_id) SELECT user.ID , ? FROM user WHERE user.email = ?");
-    $stmt->bind_param("ss", $id, $_POST['email']);
+
+    $stmt = $conn->prepare("SELECT ID from user WHERE email=?");
+    $stmt->bind_param("s", $_POST['email']);
     $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $temp = $row['ID'];
+
+    $stmt2 = $conn->prepare("DELETE FROM student WHERE student_id=?");
+    $stmt2->bind_param("s", $temp);
+    $stmt2->execute();
+
     $stmt->close();
     $conn->close();
+
     echo json_encode(array(
         "status" => "success",
-        "msg" => "Student successfully added.",
+        "msg" => "Student successfully removed.",
     ));
 } else {
     echo json_encode(array(
         "status" => "fail",
-        "msg" => "Fail to add student.",
+        "msg" => "Fail to remove student.",
     ));
 }
