@@ -3,6 +3,38 @@ session_start();
 if (!isset($_SESSION['user'])) {
   header("Location: /um-rmms");
 }
+
+try {
+  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
+  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+  $user_id = $_SESSION["id"];
+
+
+  $query1 = "SELECT * FROM meeting";
+  $result1 = $pdo->query($query1);
+
+  $records = array();
+  while ($row = $result1->fetch()) {
+    $starttime =    explode(" ", $row['start_time']);
+    $endtime =    explode(" ", $row['end_time']);
+    $records[] = array('ID' => $row['ID'], 'user_id' => $row['user_id'], 'date' => $starttime[0], 'start_time' => $starttime[1], 'end_time' => $endtime[1], 'title' => $row['title'], 'venue' => $row['venue'], 'notification' => $row['notification'], 'description' => $row['description']);
+  }
+  $query2 = "SELECT meeting_notes.ID, user.full_name, meeting_notes.title, meeting_notes.description, meeting_notes.meeting_id FROM meeting_notes INNER JOIN user ON user.ID = meeting_notes.user_id WHERE meeting_id in (SELECT ID from `meeting` WHERE user_id='$user_id' UNION SELECT meeting_id FROM guest WHERE user_id='$user_id');";
+  $result2 = $pdo->query($query2);
+  $meeting_notes = array();
+  while ($row = $result2->fetch()) {
+    $meeting_notes[] = array('meetingnotesID' => $row['ID'], 'full_name' => $row['full_name'], 'title' => $row['title'], 'note_description' => $row['description']);
+  }
+
+  $query3 = "SELECT full_name FROM user where ID = $user_id;";
+  $result3 = $pdo->query($query3);
+  $full_name = $result3->fetch();
+  $fullname = $full_name[0];
+  $pdo = null;
+} catch (PDOException $e) {
+  echo " Error: " .  $e->getMessage();
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,47 +58,145 @@ if (!isset($_SESSION['user'])) {
   <!-- icon -->
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/manageMeeting/meetingrecord.css" />
-  <link rel="shortcut icon" href="favicon.ico">
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
 </head>
 
 <body>
-  <!--Delete message -->
-  <div class="modal fade" id="deleteAlert" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            Delete Message
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Are you sure you want to delete this meeting?<br />
-          This cannot be undone.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary" onClick="replyDelete()" data-dismiss="modal">
-            Delete
-          </button>
+  <?php foreach ($records as $record) { ?>
+    <!-- Delete modal starts -->
+    <div class="modal fade" id="delete<?php echo "$record[ID]"; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <form method="post">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Delete Message
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this meeting?<br />
+              This cannot be undone.
+            </div>
+            <input type="hidden" name="delete_id" value="<?php echo "$record[ID]"; ?>">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" name="delete" <?php
+                                                                          // get user_id of meeting owner
+                                                                          $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                          $query = "SELECT user_id FROM meeting WHERE ID='$record[ID]'";
+                                                                          $result = $pdo->query($query);
+                                                                          $owner_id = "";
+                                                                          while ($row = $result->fetch()) {
+                                                                            $owner_id = $row['user_id'];
+                                                                          }
+                                                                          $pdo = null;
+                                                                          if ($_SESSION['id'] != $owner_id) echo "disabled";
+                                                                          ?>>
+                Delete
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Delete modal ends -->
+
+    <!-- Edit modal starts -->
+    <div class="modal fade" id="edit<?php echo "$record[ID]"; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Update Meeting Record
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Form starts here -->
+            <form novalidate method="POST">
+              <div class="form-group">
+                <label for="datepicker">Date*</label>
+                <input type="date" class="form-control" name="datepicker" required />
+              </div>
+
+              <div class="form-group">
+                <label for="starttime">Start Time*</label>
+                <input type="time" class="form-control" name="starttime" required />
+              </div>
+
+              <div class="form-group">
+                <label for="endtime">End Time*</label>
+                <input type="time" class="form-control" name="endtime" required />
+              </div>
+
+              <div class="form-group">
+                <label for="title">Title*</label>
+                <input type="text" class="form-control" name="title" value="<?php echo "$record[title]"; ?>" disabled />
+              </div>
+
+              <div class="form-group">
+                <label for="venue">Venue*</label>
+                <select class="custom-select" name="venue" required>
+                  <option value="">Select a venue*</option>
+                  <option value="MM4, FCSIT">MM4, FCSIT</option>
+                  <option value="DK2, FCSIT">DK2, FCSIT</option>
+                  <option value="DK1, FCSIT">DK1, FCSIT</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="description">Descriptions</label>
+                <textarea class="form-control" name="description" rows="5" style="height:100%;"><?php echo "$record[description]"; ?></textarea>
+              </div>
+
+              <input type="hidden" name="edit_id" value="<?php echo "$record[ID]"; ?>">
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" name="edit" <?php
+                                                                          // get user_id of meeting owner
+                                                                          $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                          $query = "SELECT user_id FROM meeting WHERE ID='$record[ID]'";
+                                                                          $result = $pdo->query($query);
+                                                                          $owner_id = "";
+                                                                          while ($row = $result->fetch()) {
+                                                                            $owner_id = $row['user_id'];
+                                                                          }
+                                                                          $pdo = null;
+                                                                          if ($_SESSION['id'] != $owner_id) echo "data-toggle='popover' data-content='And here's some amazing content. It's very engaging. Right?' disabled ";
+                                                                          ?>>
+                  Save changes
+                </button>
+              </div>
+            </form>
+            <!-- Form ends here -->
+
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Delete message ends -->
+    <!-- Edit modal ends-->
 
-  <!-- Pop out modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <?php }
+?>
+
+
+  <!-- Add notes modal starts -->
+  <div id="addnotesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">
-            Update Meeting Record
+            <?php echo $fullname; ?>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -76,53 +206,57 @@ if (!isset($_SESSION['user'])) {
           <!-- Form starts here -->
           <form novalidate method="POST">
             <div class="form-group">
-              <label for="datepicker">Date*</label>
-              <input type="date" class="form-control" id="datepicker" required />
-            </div>
+              <label for="description">Choose your meeting</label>
+              <select name="meetinglist">
+                <?php
+                try {
+                  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
+                  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
 
-            <div class="form-group">
-              <label for="starttime">Start Time*</label>
-              <input type="time" class="form-control" id="starttime" required />
-            </div>
-
-            <div class="form-group">
-              <label for="endtime">End Time*</label>
-              <input type="time" class="form-control" id="endtime" required />
-            </div>
-
-            <div class="form-group">
-              <label for="title">Title*</label>
-              <input type="text" class="form-control" id="title" placeholder="Title of Meeting" required />
-            </div>
-
-            <div class="form-group">
-              <label for="venue">Venue*</label>
-              <select id="venue" class="custom-select" required>
-                <option value="FSKTM">FCSIT</option>
-                <option value="2">DK2, FCSIT</option>
-                <option value="3">DK1, FCSIT</option>
-              </select>
+                  $sql = "SELECT ID, title FROM meeting";
+                  $cmd = $pdo->prepare($sql);
+                  $cmd->execute();
+                  $result = $cmd->fetchAll(PDO::FETCH_ASSOC);
+                  $isFirst = true;
+                  foreach ($result as $row) {
+                    if ($isFirst) {
+                      echo  '<option value="' .  $row['ID'] . " " . $row['title'] . '"selected>' . $row['title'] . '</option>';
+                    } else {
+                      echo '<option value="' . $row['ID'] . " " . $row['title'] . '">' . $row['title'] . '</option>';
+                    }
+                    $isFirst = false;
+                  }
+                  $pdo = null;
+                } catch (PDOException $e) {
+                  echo " Error: " .  $e->getMessage();
+                  exit;
+                }
+                ?></select>
             </div>
 
             <div class="form-group">
               <label for="description">Descriptions</label>
-              <textarea class="form-control" id="description" rows="5" style="height:100%;" placeholder="The meeting descriptions"></textarea>
+              <textarea name="comment_descriptions" class="form-control" placeholder="Enter your comment here" rows="3" style="height:100%;"></textarea>
+            </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" name="add_comment">
+                Add comment
+              </button>
             </div>
           </form>
           <!-- Form ends here -->
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary">
-            Save changes
-          </button>
-        </div>
       </div>
     </div>
   </div>
-  <!-- Pop out modal ends-->
+  <!-- Add notes modal ends-->
+
+
   <div class="wrapper">
     <!-- Sidebar Holder -->
     <nav id="sidebar">
@@ -166,21 +300,68 @@ if (!isset($_SESSION['user'])) {
       </h1>
       <div class="row justify-content-center">
         <div class="col-md-12 col-sm-12">
-          <div id="meetingrecord" class="row justify-content-center"></div>
-          <div class="notes mt-5 mb-2">
-            <h2 style="color: #7BABED; text-align: center;" id="welcome">
-              Add Meeting Notes
-            </h2>
-            <div id="controls">
-              <i class="icon-doc-text" id="createNote"><img src="img/button.png" alt="Button" height="30" width="30" /></i>
-            </div>
+          <div id="meetingrecord" class="row justify-content-center">
+
+            <?php foreach ($records as $record) { ?>
+              <div id="<?php echo "$record[ID]"; ?>" class="col-sm-4 pt-4">
+                <div class="card  mx-auto">
+                  <div class="card-body">
+                    <h4 class="card-title"><?php echo "$record[title]"; ?></h4>
+                    <button type="button" class="close" aria-label="Close" data-target="#delete<?php echo "$record[ID]"; ?>" data-toggle="modal" style="color: #7BABED">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <p class="card-text">
+                      <strong>Date: </strong>
+                      <?php echo "$record[date]"; ?>
+                      <br />
+                      <strong>Start time: </strong>
+                      <?php echo "$record[start_time]"; ?>
+                      <br />
+                      <strong>End time: </strong>
+                      <?php echo "$record[end_time]"; ?>
+                      <br />
+                      <strong>Venue: </strong>
+                      <?php echo "$record[venue]"; ?>
+                      <br />
+                      <strong>Description: </strong>
+                      <?php echo "$record[description]"; ?>
+                    </p>
+                    <p class="card-text">
+                      <a href="#edit<?php echo "$record[ID]"; ?>" data-toggle="modal" style="text-decoration: none; color: #7BABED">
+                        Edit
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            <?php } ?>
           </div>
 
-          <div class=" text-center">
-            <ul id="myCard" class="row justify-content-center" style="padding-left: 20%; padding-right: 20%">
-              <!-- Add notes here -->
-            </ul>
+          <hr>
+
+          <div style="text-align: center;" class="mb-3">
+            <button class="btn btn-primary" data-target="#addnotesModal" data-toggle="modal">
+              Add Meeting Notes
+            </button>
           </div>
+
+          <div class="row justify-content-center">
+            <?php foreach ($meeting_notes as $meeting_note) { ?>
+              <div class="card border-dark m-1" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title"><?php echo $meeting_note['title']; ?></h5>
+                  <p class="card-text"><?php echo $meeting_note['note_description']; ?></p>
+                </div>
+                <div class="card-footer text-muted">
+                  <p style="color: #7BABED;">
+                    <?php echo "by " . $meeting_note['full_name']; ?>
+                  </p>
+                </div>
+              </div>
+            <?php } ?>
+          </div>
+
         </div>
       </div>
       <footer class="footer">
@@ -231,7 +412,76 @@ if (!isset($_SESSION['user'])) {
       });
     });
   </script>
-  <script type="text/javascript" src="js/manageMeeting/meetingrecord.js"></script>
+  <?php
+  try {
+    $connString = "mysql:host=127.0.0.1;dbname=umrmms";
+    $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+
+    if (isset($_POST['delete'])) {
+      if (
+        isset($_POST["delete_id"])
+      ) {
+        $delete_id = $_POST['delete_id'];
+        $query = "DELETE FROM meeting WHERE ID ='$delete_id' ";
+        $result = $pdo->query($query);
+        echo ("<meta http-equiv='refresh' content='1'>");
+      }
+    }
+
+
+    if (isset($_POST['edit'])) {
+
+      if (
+        !empty($_POST["datepicker"]) && !empty($_POST["starttime"]) &&
+        !empty($_POST["endtime"]) && !empty($_POST["title"]) &&
+        !empty($_POST["venue"]) && !empty($_POST["description"]) && isset($_POST["edit_id"])
+      ) {
+        echo isset($_POST["venue"]);
+        echo "<br>";
+        echo isset($_POST["description"]);
+
+        $edit_id = $_POST['edit_id'];
+
+        $user_id = $_SESSION['id'];
+        $datepicker = $_POST['datepicker'];
+        $start_time = $datepicker . " " . $_POST['starttime'] . ":00";
+        $end_time = $datepicker . " " . $_POST['endtime'] . ":00";
+        $title = $_POST['title'];
+        $venue = $_POST['venue'];
+        $description = $_POST['description'];
+
+        $query = "UPDATE meeting SET start_time = '$start_time', end_time = '$end_time', title = '$title', venue = '$venue', description = '$description' WHERE ID=$edit_id";
+        $result = $pdo->query($query);
+
+        $query = "UPDATE meeting_notes SET title = '$title' WHERE meeting_id = $edit_id";
+        $result = $pdo->query($query);
+        echo ("<meta http-equiv='refresh' content='1'>");
+      }
+    }
+
+    if (isset($_POST['add_comment'])) {
+      if (
+        isset($_POST["meetinglist"]) && $_POST["meetinglist"] != " " && !empty($_POST["comment_descriptions"])
+      ) {
+        $user_id = $_SESSION['id'];
+        $meetinglist = $_POST['meetinglist'];
+        $meetingid = explode(" ", $meetinglist, 2);
+        $comment_descriptions = $_POST['comment_descriptions'];
+
+        $query = "INSERT INTO meeting_notes (user_id, meeting_id, title, description) VALUES ($user_id, $meetingid[0], '$meetingid[1]', '$comment_descriptions')";
+        $result = $pdo->query($query);
+        echo ("<meta http-equiv='refresh' content='1'>");
+      }
+    }
+
+    $pdo = null;
+  }
+  // Check connection
+  catch (PDOException $e) {
+    echo " Error: " .  $e->getMessage();
+    exit;
+  }
+  ?>
 </body>
 
 </html>
