@@ -69,7 +69,7 @@ if (!isset($_SESSION['user'])) {
         <?php
         if ($_SESSION['role'] == 'supervisor') {
           echo '<li>
-            <a href="../manageStudents.php">Manage Students</a>
+            <a href="manageStudents.php">Manage Students</a>
           </li>';
         }
         ?>

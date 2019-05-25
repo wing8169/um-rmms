@@ -91,7 +91,7 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
         <?php
         if ($_SESSION['role'] == 'supervisor') {
           echo '<li>
-            <a href="../manageStudents.php">Manage Students</a>
+            <a href="manageStudents.php">Manage Students</a>
           </li>';
         }
         ?>

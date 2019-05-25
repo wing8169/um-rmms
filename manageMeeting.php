@@ -64,7 +64,7 @@ try {
 
 <body>
   <?php foreach ($records as $record) { ?>
-    <!-- Delete modal starts -->
+    <!-- Delete meeting modal starts -->
     <div class="modal fade" id="delete<?php echo "$record[ID]"; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <form method="post">
@@ -105,7 +105,7 @@ try {
         </form>
       </div>
     </div>
-    <!-- Delete modal ends -->
+    <!-- Delete meeting modal ends -->
 
     <!-- Edit modal starts -->
     <div class="modal fade" id="edit<?php echo "$record[ID]"; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -124,17 +124,17 @@ try {
             <form novalidate method="POST">
               <div class="form-group">
                 <label for="datepicker">Date*</label>
-                <input type="date" class="form-control" name="datepicker" required />
+                <input type="date" class="form-control" name="datepicker" value="<?php echo "$record[date]"; ?>" required />
               </div>
 
               <div class="form-group">
                 <label for="starttime">Start Time*</label>
-                <input type="time" class="form-control" name="starttime" required />
+                <input type="time" class="form-control" name="starttime" value="<?php echo "$record[start_time]"; ?>" required />
               </div>
 
               <div class="form-group">
                 <label for="endtime">End Time*</label>
-                <input type="time" class="form-control" name="endtime" required />
+                <input type="time" class="form-control" name="endtime" value="<?php echo "$record[end_time]"; ?>" required />
               </div>
 
               <div class="form-group">
@@ -145,10 +145,9 @@ try {
               <div class="form-group">
                 <label for="venue">Venue*</label>
                 <select class="custom-select" name="venue" required>
-                  <option value="">Select a venue*</option>
-                  <option value="MM4, FCSIT">MM4, FCSIT</option>
-                  <option value="DK2, FCSIT">DK2, FCSIT</option>
-                  <option value="DK1, FCSIT">DK1, FCSIT</option>
+                  <option value="FCSIT,MM4" <?php if ("$record[venue]" == 'FCSIT,MM4') echo ' selected="selected"'; ?>>FCSIT,MM4</option>
+                  <option value="FCSIT,DK2" <?php if ("$record[venue]" == 'FCSIT,DK2') echo ' selected="selected"'; ?>>FCSIT,DK2</option>
+                  <option value="FCSIT,DK1" <?php if ("$record[venue]" == 'FCSIT,DK1') echo ' selected="selected"'; ?>>FCSIT,DK1</option>
                 </select>
               </div>
 
@@ -180,7 +179,6 @@ try {
               </div>
             </form>
             <!-- Form ends here -->
-
           </div>
         </div>
       </div>
@@ -189,7 +187,52 @@ try {
 
   <?php }
 ?>
+  <?php foreach ($meeting_notes as $meeting_note) { ?>
+    <!-- Delete note modal starts -->
+    <div class="modal fade" id="delete_note<?php echo "$meeting_note[meetingnotesID]"; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <form method="post">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Delete Notes
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete the note?<br />
+              This cannot be undone.
+            </div>
+            <input type="hidden" name="delete_note_id" value="<?php echo "$meeting_note[meetingnotesID]"; ?>">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" name="delete_note" <?php
+                                                                                // get user_id of meeting_note owner
+                                                                                $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                                $query = "SELECT user_id FROM meeting_notes WHERE ID='$meeting_note[meetingnotesID]'";
+                                                                                $result = $pdo->query($query);
+                                                                                $owner_id = "";
+                                                                                while ($row = $result->fetch()) {
+                                                                                  $owner_id = $row['user_id'];
+                                                                                }
+                                                                                $pdo = null;
+                                                                                if ($_SESSION['id'] != $owner_id) echo "disabled";
+                                                                                ?>>
+                Delete
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
+    <!-- Delete note modal ends -->
+  <?php }
+?>
 
   <!-- Add notes modal starts -->
   <div id="addnotesModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -284,7 +327,7 @@ try {
         <?php
         if ($_SESSION['role'] == 'supervisor') {
           echo '<li>
-            <a href="../manageStudents.php">Manage Students</a>
+            <a href="manageStudents.php">Manage Students</a>
           </li>';
         }
         ?>
@@ -355,8 +398,11 @@ try {
 
           <div class="row justify-content-center">
             <?php foreach ($meeting_notes as $meeting_note) { ?>
-              <div class="card border-dark m-1" style="width: 18rem;">
+              <div class="card border-dark m-1" style="width: 18rem;" id="<?php echo "$meeting_note[meetingnotesID]"; ?>">
                 <div class="card-body">
+                  <button type="button" class="close" aria-label="Close" data-target="#delete_note<?php echo "$meeting_note[meetingnotesID]"; ?>" data-toggle="modal" style="color: #7BABED">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
                   <h5 class="card-title"><?php echo $meeting_note['title']; ?></h5>
                   <p class="card-text"><?php echo $meeting_note['note_description']; ?></p>
                 </div>
@@ -431,36 +477,40 @@ try {
         $delete_id = $_POST['delete_id'];
         $query = "DELETE FROM meeting WHERE ID ='$delete_id' ";
         $result = $pdo->query($query);
+
+        $query = "DELETE FROM meeting_notes WHERE  meeting_id = $delete_id";
+        $result = $pdo->query($query);
         echo ("<meta http-equiv='refresh' content='1'>");
       }
     }
 
 
     if (isset($_POST['edit'])) {
-
       if (
-        !empty($_POST["datepicker"]) && !empty($_POST["starttime"]) &&
-        !empty($_POST["endtime"]) && !empty($_POST["title"]) &&
-        !empty($_POST["venue"]) && !empty($_POST["description"]) && isset($_POST["edit_id"])
+        isset($_POST["datepicker"]) && isset($_POST["starttime"]) &&
+        isset($_POST["endtime"]) &&
+        isset($_POST["venue"]) && isset($_POST["description"]) && isset($_POST["edit_id"])
       ) {
-        echo isset($_POST["venue"]);
-        echo "<br>";
-        echo isset($_POST["description"]);
-
         $edit_id = $_POST['edit_id'];
-
-        $user_id = $_SESSION['id'];
         $datepicker = $_POST['datepicker'];
-        $start_time = $datepicker . " " . $_POST['starttime'] . ":00";
-        $end_time = $datepicker . " " . $_POST['endtime'] . ":00";
-        $title = $_POST['title'];
+        $start_time = $datepicker . " " . $_POST['starttime'];
+        $end_time = $datepicker . " " . $_POST['endtime'];
         $venue = $_POST['venue'];
         $description = $_POST['description'];
 
-        $query = "UPDATE meeting SET start_time = '$start_time', end_time = '$end_time', title = '$title', venue = '$venue', description = '$description' WHERE ID=$edit_id";
+        $query = "UPDATE meeting SET start_time = '$start_time', end_time = '$end_time', venue = '$venue', description = '$description' WHERE ID=$edit_id";
         $result = $pdo->query($query);
 
-        $query = "UPDATE meeting_notes SET title = '$title' WHERE meeting_id = $edit_id";
+        echo ("<meta http-equiv='refresh' content='1'>");
+      }
+    }
+
+    if (isset($_POST['delete_note'])) {
+      if (
+        isset($_POST["delete_note_id"])
+      ) {
+        $delete_note_id = $_POST['delete_note_id'];
+        $query = "DELETE FROM meeting_notes WHERE ID ='$delete_note_id' ";
         $result = $pdo->query($query);
         echo ("<meta http-equiv='refresh' content='1'>");
       }
