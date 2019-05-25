@@ -83,6 +83,19 @@ if (!isset($_SESSION['user'])) {
       <h3 class="mb-4 text-center">Students</h3>
       <div class="row justify-content-center" id="cardcontainer"></div>
 
+      <div class="row justify-content-center align-items-center">
+        <form class="col-5 container mt-5 ml-3 mr-3" action="" novalidate method="POST">
+          <div class="form-group">
+            <input id="email" type="text" placeholder="Enter email" name="email" class="form-control" required />
+            <br>
+            <div class="row justify-content-center">
+              <button id="signin" type="button" class="btn btn-primary col-4">
+                Add Student
+              </button>
+            </div>
+        </form>
+      </div>
+
       <footer class="footer">
         <div class="container">
           <hr />
