@@ -63,6 +63,13 @@ if (!isset($_SESSION['user'])) {
         <li>
           <a href="reviewSupervisor.php">Review Reports</a>
         </li>
+        <?php
+        if ($_SESSION['role'] == 'supervisor') {
+          echo '<li>
+            <a href="../manageStudents.php">Manage Students</a>
+          </li>';
+        }
+        ?>
       </ul>
 
       <ul class="list-unstyled CTAs">
@@ -82,22 +89,6 @@ if (!isset($_SESSION['user'])) {
       </h1>
       <h3 class="mb-4 text-center">Students</h3>
       <div class="row justify-content-center" id="cardcontainer"></div>
-
-      <div class="row justify-content-center align-items-center">
-        <form class="col-5 container mt-5 ml-3 mr-3" action="" novalidate method="POST">
-          <div class="form-group">
-            <input id="email" type="text" placeholder="Enter email" name="email" class="form-control" required />
-            <br>
-            <div class="row justify-content-around">
-              <button id="addstudent" type="button" class="btn btn-primary col-4">
-                Add Student
-              </button>
-              <button id="removestudent" type="button" class="btn btn-primary col-5">
-                Remove Student
-              </button>
-            </div>
-        </form>
-      </div>
 
       <footer class="footer">
         <div class="container">
@@ -189,49 +180,6 @@ if (!isset($_SESSION['user'])) {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
       });
-      //add student under supervisor
-      $("#addstudent").click(function() {
-        let data = {
-          "email": $("#email").val(),
-        }
-        $.ajax({
-          type: "POST",
-          url: "../php/progress/addStudent.php",
-          data: data,
-          cache: false,
-          success: function(data) {
-            data = JSON.parse(data);
-            if (data["status"] === "success") {
-              location.reload();
-              alert(data['msg']);
-            } else {
-              alert(data['msg']);
-            }
-          }
-        });
-      });
-
-      //remove student under supervisor
-      $("#removestudent").click(function() {
-        let data = {
-          "email": $("#email").val(),
-        }
-        $.ajax({
-          type: "POST",
-          url: "../php/progress/removeStudent.php",
-          data: data,
-          cache: false,
-          success: function(data) {
-            data = JSON.parse(data);
-            if (data["status"] === "success") {
-              location.reload();
-              alert(data['msg']);
-            } else {
-              alert(data['msg']);
-            }
-          }
-        });
-      })
 
     })
   </script>

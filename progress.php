@@ -88,6 +88,13 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
         <li>
           <a href="<?php echo $_SESSION['role'] == 'student' ?  'reviewStudent.php' : 'supervisor/reviewSupervisor.php' ?>">Review Reports</a>
         </li>
+        <?php
+        if ($_SESSION['role'] == 'supervisor') {
+          echo '<li>
+            <a href="../manageStudents.php">Manage Students</a>
+          </li>';
+        }
+        ?>
       </ul>
 
       <ul class="list-unstyled CTAs">
@@ -289,10 +296,10 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
           data = JSON.parse(data);
           if (data['status'] === "success") {
             alert(data['msg']);
-          } else if (data['status'] === "fail") {
+            location.reload();
+          } else {
             alert(data['msg']);
           }
-          location.reload();
         },
       });
     }

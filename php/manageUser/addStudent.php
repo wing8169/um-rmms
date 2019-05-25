@@ -4,16 +4,22 @@ include("../config.php");
 
 if (isset($_POST['email'])) {
     $id = $_SESSION['id'];
-    // check if email exist database
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM user WHERE email=?");
+    // check if email exist database or user is supervisor
+    $stmt = $conn->prepare("SELECT ID, role FROM user WHERE email=?;");
     $stmt->bind_param("s", $_POST['email']);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_all();
-    if ($row[0][0] == 0) {
+    if (count($row) == 0) {
         exit(json_encode(array(
             "status" => "fail",
-            "msg" => "Email is not in database.",
+            "msg" => "Email does not exist.",
+        )));
+    }
+    if ($row[0][1] == 'supervisor') {
+        exit(json_encode(array(
+            "status" => "fail",
+            "msg" => "You are not allowed to add supervisor as student.",
         )));
     }
     // check if email is added already

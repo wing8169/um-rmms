@@ -3,6 +3,9 @@ session_start();
 if (!isset($_SESSION['user'])) {
   header("Location: /um-rmms");
 }
+if (isset($_SESSION['role']) && $_SESSION['role'] != 'supervisor') {
+  header('Location: /um-rmms');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,16 +66,12 @@ if (!isset($_SESSION['user'])) {
         <li>
           <a href="progress.php">Manage Progress</a>
         </li>
-        <li class="active">
-          <a href="#">Review Reports</a>
+        <li>
+          <a href="<?php echo $_SESSION['role'] == 'student' ?  'reviewStudent.php' : 'supervisor/reviewSupervisor.php' ?>">Review Reports</a>
         </li>
-        <?php
-        if ($_SESSION['role'] == 'supervisor') {
-          echo '<li>
-            <a href="../manageStudents.php">Manage Students</a>
-          </li>';
-        }
-        ?>
+        <li class="active">
+          <a href="#">Manage Students</a>
+        </li>
       </ul>
 
       <ul class="list-unstyled CTAs">
@@ -88,68 +87,30 @@ if (!isset($_SESSION['user'])) {
         <span></span>
       </button>
       <h1 class="text-center mt-3 mb-3" style="font-family: 'Mukta', sans-serif;color: #7BABED;">
-        Submit Report
+        <?php
+        if ($_SESSION['role'] == 'student') {
+          echo 'Manage Supervisors';
+        } else {
+          echo 'Manage Students';
+        }
+        ?>
       </h1>
-      <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8 col-sm-12">
-          <form novalidate method="POST" enctype="multipart/form-data" id="form">
-            <div class="form-group">
-              <label for="emailAddr">*Email address:</label>
-              <select name="emailAddr" id="emailAddr" class="form-control custom-select">
-                <?php
-                try {
-                  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
-                  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
-                  $sql = "SELECT user.email FROM user WHERE user.ID in (SELECT user_id FROM student WHERE student_id = '$_SESSION[id]');";
-                  $cmd = $pdo->prepare($sql);
-                  $cmd->execute();
-                  $result = $cmd->fetchAll(PDO::FETCH_ASSOC);
-                  $isFirst = true;
-                  foreach ($result as $row) {
-                    if ($isFirst) {
-                      echo  '<option value="' .  $row['email'] . " " . '"selected>' . $row['email'] . '</option>';
-                    } else {
-                      echo '<option value="' . $row['email'] . " " . '">' . $row['email'] . '</option>';
-                    }
-                    $isFirst = false;
-                  }
-                  $pdo = null;
-                } catch (PDOException $e) {
-                  echo " Error: " .  $e->getMessage();
-                  exit;
-                }
-                ?></select>
-              <small id="emailHelp" class="form-text text-muted" required>Recipient email</small>
-            </div>
-            <div class="form-group">
-              <label for="reportname">*Report Name:</label>
-              <input name="reportname" type="text" class="form-control" id="reportname" placeholder="Name of report" />
-            </div>
-            <div class="form-group">
-              <label for="fileSubmit">*Please Upload Your Report:</label>
-              <input name="fileSubmit" type="file" id="fileSubmit" class="form-control" accept=".doc,.docx,.pdf" />
-            </div>
-            <div class="mt-3">
-              <button type="submit" class="btn btn-primary" required id="submitreport">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-        <table class="table mt-5 ml-5 mr-5" id="reporttable">
-          <thead class="thead-dark">
-            <tr>
-              <th>ID</th>
-              <th>Report Name</th>
-              <th>Submission Date</th>
-              <th>Reviewer</th>
-              <th>Status</th>
-              <th>Reviews</th>
-              <th>Attachments</th>
-            </tr>
-          </thead>
-          <tbody id="reporttablebody"></tbody>
-        </table>
+      <div class="row justify-content-center" id="cardcontainer"></div>
+
+      <div class="row justify-content-center align-items-center">
+        <form class="col-7 container mt-5 ml-3 mr-3" action="" novalidate method="POST">
+          <div class="form-group">
+            <input id="email" type="text" placeholder="Enter email" name="email" class="form-control typeahead" required />
+          </div>
+          <div class="text-center">
+            <button id="addstudent" type="button" class="btn btn-primary mt-3">
+              Add Student
+            </button>
+            <button id="removestudent" type="button" class="btn btn-primary mt-3">
+              Remove Student
+            </button>
+          </div>
+        </form>
       </div>
 
       <footer class="footer">
@@ -180,41 +141,27 @@ if (!isset($_SESSION['user'])) {
   <script src="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-      // update table
+      // update cards
       $.ajax({
         type: "POST",
-        url: "php/reviewStudent/updateTable.php",
+        url: "php/progress/selectCards.php",
         data: {},
         cache: false,
         success: function(data) {
           data = JSON.parse(data);
           $.each(data, function(index, value) {
-            $("#reporttablebody").append(
-              `<tr>
-              <td>${value["id"]}</td>
-              <td>${value["name"]}</td>
-              <td>${value["submission_date"]}</td>
-              <td>${value["rec_name"]}</td>
-              <td>${value["status"]}</td>
-              <td>${value["review"]}</td>
-              <td>
-                <a href="${value["file_path"]}" target="_blank">Click to download report</a>
-                <br>
-                <br>
-                <a href="${value["review_path"] == ''? '#' : value["review_path"]}" target="${value["review_path"] == ''? '_self' : '_blank'}">Click to download review report</a>
-              </td>
-            </tr>`
+            $("#cardcontainer").append(
+              `<div class="card text-center pt-5 pb-5 ml-3 mr-3 mt-3 mb-3" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">${value['full_name']}</h5>
+                  <p class="card-text">
+                    ${value['email']}
+                  </p>
+                </div>
+              </div>`
             );
           });
         }
-      });
-      $('#fileSubmit').on('change', function() {
-        var file = this.files[0];
-        // Also see .name, .type
-      });
-      $("#sidebarCollapse").on("click", function() {
-        $("#sidebar").toggleClass("active");
-        $(this).toggleClass("active");
       });
       $("#logout").click(function() {
         // send request
@@ -230,24 +177,58 @@ if (!isset($_SESSION['user'])) {
           }
         });
       });
-      $("#form").on('submit', function(e) {
-        e.preventDefault();
+      // side bar function
+      $("#sidebarCollapse").on("click", function() {
+        $("#sidebar").toggleClass("active");
+        $(this).toggleClass("active");
+      });
+      //add student under supervisor
+      $("#addstudent").click(function() {
+        let data = {
+          "email": $("#email").val(),
+        }
         $.ajax({
           type: "POST",
-          url: "php/reviewStudent/studentSubmit.php",
-          data: new FormData(this),
+          url: "php/manageUser/addStudent.php",
+          data: data,
           cache: false,
-          contentType: false,
-          processData: false,
           success: function(data) {
             data = JSON.parse(data);
-            alert(data['msg']);
-            location.reload();
+            if (data["status"] === "success") {
+              alert(data['msg']);
+              location.reload();
+            } else {
+              alert(data['msg']);
+            }
           }
         });
       });
-    });
+
+      //remove student under supervisor
+      $("#removestudent").click(function() {
+        let data = {
+          "email": $("#email").val(),
+        }
+        $.ajax({
+          type: "POST",
+          url: "php/manageUser/removeStudent.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            if (data["status"] === "success") {
+              location.reload();
+              alert(data['msg']);
+            } else {
+              alert(data['msg']);
+            }
+          }
+        });
+      })
+
+    })
   </script>
+  <script src="js/autocomplete.js"></script>
 </body>
 
 </html>

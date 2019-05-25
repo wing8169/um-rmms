@@ -67,6 +67,13 @@ if (!isset($_SESSION['user'])) {
         <li class="active">
           <a href="#">Review Reports</a>
         </li>
+        <?php
+        if ($_SESSION['role'] == 'supervisor') {
+          echo '<li>
+            <a href="../manageStudents.php">Manage Students</a>
+          </li>';
+        }
+        ?>
       </ul>
 
       <ul class="list-unstyled CTAs">

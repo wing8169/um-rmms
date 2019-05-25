@@ -213,7 +213,7 @@ try {
                 try {
                   $connString = "mysql:host=127.0.0.1;dbname=umrmms";
                   $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
-                  $sql = "SELECT ID, title FROM meeting";
+                  $sql = "SELECT ID, title FROM meeting WHERE user_id = '$user_id' OR ID in (SELECT meeting_id FROM guest WHERE user_id = '$user_id');";
                   $cmd = $pdo->prepare($sql);
                   $cmd->execute();
                   $result = $cmd->fetchAll(PDO::FETCH_ASSOC);
@@ -281,6 +281,13 @@ try {
         <li>
           <a href="<?php echo $_SESSION['role'] == 'student' ?  'reviewStudent.php' : 'supervisor/reviewSupervisor.php' ?>">Review Reports</a>
         </li>
+        <?php
+        if ($_SESSION['role'] == 'supervisor') {
+          echo '<li>
+            <a href="../manageStudents.php">Manage Students</a>
+          </li>';
+        }
+        ?>
       </ul>
 
       <ul class="list-unstyled CTAs">
