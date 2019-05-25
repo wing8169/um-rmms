@@ -240,17 +240,18 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
 
   <script type="text/javascript">
     // data for gantt chart
-    var data = [];
-    // add all the tasks into the dropdown menu
+    var gdata = [];
+
     function updateTaskNames() {
       $("#taskname2").empty();
-      data.forEach(function(item, index) {
+      gdata.forEach(function(item, index) {
         $("#taskname2").append(`<option>${item[0]}</option>`);
       });
-    }
+    };
+
     // update the fields in the update section based on task name
     function updateForms(taskname) {
-      var selectedItems = data.filter(d => d[0] === taskname);
+      var selectedItems = gdata.filter(d => d[0] === taskname);
       if (selectedItems.length != 0) {
         var selectedItem = selectedItems[0];
         // update fields
@@ -261,7 +262,7 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
         $("#percent2").val(selectedItem[5]);
         // add other tasks into dependency list except the task itself
         $("#depend2").empty();
-        data.forEach(function(item, index) {
+        gdata.forEach(function(item, index) {
           if (item[0] !== taskname)
             $("#depend2").append(`<option>${item[0]}</option>`);
         });
@@ -276,28 +277,76 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
 
     function remove() {
       var id = $("#taskname2").val();
-      var index = data.findIndex(e => e[0] === id);
-      data.splice(index, 1);
-      for (let i = 0; i < data.length; i++) {
-        if (data[i][6] === null || data[i][6] === "") continue;
-        let dependencies = data[i][6].split(",");
-        let j = dependencies.findIndex(e => e === id);
-        if (j !== -1) dependencies.splice(j, 1);
-        data[i][6] = dependencies.join(",");
-        if (data[i][6] === "") data[i][6] = null;
-      }
-      updateChart(data);
-      updateTaskNames();
-      if ($("#taskname2").val() !== "") {
-        updateForms($("#taskname2").val());
-      }
-      $("#depend").empty();
-      data.forEach(function(item, index) {
-        $("#depend").append(`<option>${item[0]}</option>`);
+      let data = {
+        "taskname2": id,
+      };
+      $.ajax({
+        type: "POST",
+        url: "php/progress/removeProgress.php",
+        data: data,
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          if (data['status'] === "success") {
+            alert(data['msg']);
+          } else if (data['status'] === "fail") {
+            alert(data['msg']);
+          }
+          location.reload();
+        },
       });
-      $("#depend").selectpicker("refresh");
     }
+
     $(document).ready(function() {
+      $.ajax({
+        type: "POST",
+        url: "php/progress/progress.php",
+        data: {},
+        cache: false,
+        success: function(data) {
+          data = JSON.parse(data);
+          data.forEach(function(item, index) {
+            item[0] = item[1];
+            item.splice(4, 0, null);
+            item.splice(7, 1);
+            let part1 = item[2].split('-');
+            let date1 = new Date(Date.UTC(part1[0], part1[1] - 1, part1[2]));
+            let part2 = item[3].split('-');
+            let date2 = new Date(Date.UTC(part2[0], part2[1] - 1, part2[2]));
+            item[2] = date1;
+            item[3] = date2;
+          });
+          setTimeout(function() {
+            updateChart(data);
+          }, 1000);
+
+          data.forEach(function(item, index) {
+            gdata.push(item);
+          });
+        }
+      });
+
+      // add options based on data
+      setTimeout(function() {
+        gdata.forEach(function(item, index) {
+          $("#depend").append(`<option>${item[0]}</option>`);
+          $("#depend").selectpicker("refresh");
+        });
+        updateTaskNames();
+      }, 1500);
+
+      // initial update for form fields
+      setTimeout(function() {
+        if ($("#taskname2").val() !== "") {
+          updateForms($("#taskname2").val());
+        }
+      }, 1500);
+
+      // update fields based on task
+      $("#taskname2").on("change", function() {
+        updateForms($("#taskname2").val());
+      });
+
       // supervisor back
       $("#back1").click(function() {
         // send request
@@ -329,48 +378,75 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
         $(this).toggleClass("active");
       });
 
-      // add options based on data
-      updateTaskNames();
-      // initial update for form fields
-      if ($("#taskname2").val() !== "") {
-        updateForms($("#taskname2").val());
-      }
       // add form function
-      $("#add").on("click", function() {
+      $("#add").click(function() {
         var id = $("#taskname").val();
         var sdate = new Date($("#sdate").val());
+        sdate = sdate.toISOString().substr(0, 10);
         var edate = new Date($("#edate").val());
+        edate = edate.toISOString().substr(0, 10);
         var percent = parseInt($("#percent").val());
         var dependArr = $("#depend").val();
         var depend = dependArr.join(",");
         if (depend === "") depend = null;
-        var newRow = [id, id, sdate, edate, null, percent, depend];
-        data.push(newRow);
-        updateChart(data);
-        $("#depend").append(`<option>${id}</option>`);
-        $("#depend").selectpicker("refresh");
-        updateTaskNames();
-        updateForms(data[0][0]);
+        let data = {
+          "taskname": id,
+          "sdate": sdate,
+          "edate": edate,
+          "percent": percent,
+          "depend": depend,
+        };
+        $.ajax({
+          type: "POST",
+          url: "php/progress/addProgress.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            if (data['status'] === "success") {
+              alert(data['msg']);
+              location.href = 'progress.php';
+            } else {
+              alert(data['msg']);
+            }
+            location.reload();
+          },
+        });
       });
-      // update fields based on task
-      $("#taskname2").on("change", function() {
-        updateForms($("#taskname2").val());
-      });
+
       // update form function
-      $("#update").on("click", function() {
+      $("#update").click(function() {
         var id = $("#taskname2").val();
         var sdate = new Date($("#sdate2").val());
+        sdate = sdate.toISOString().substr(0, 10);
         var edate = new Date($("#edate2").val());
+        edate = edate.toISOString().substr(0, 10);
         var percent = parseInt($("#percent2").val());
         var dependArr = $("#depend2").val();
         var depend = dependArr.join(",");
-        // if string is empty, make it null
         if (depend === "") depend = null;
-        var newRow = [id, id, sdate, edate, null, percent, depend];
-        data[data.findIndex(e => e[0] === id)] = newRow;
-        updateChart(data);
-        updateTaskNames();
-        updateForms(data[0][0]);
+        let data = {
+          "taskname2": id,
+          "sdate2": sdate,
+          "edate2": edate,
+          "percent2": percent,
+          "depend2": depend,
+        };
+        $.ajax({
+          type: "POST",
+          url: "php/progress/updateProgress.php",
+          data: data,
+          cache: false,
+          success: function(data) {
+            data = JSON.parse(data);
+            if (data['status'] === "success") {
+              alert(data['msg']);
+            } else if (data['status'] === "fail") {
+              alert(data['msg']);
+            }
+            location.reload();
+          }
+        });
       });
 
       $("#logout").click(function() {
@@ -387,30 +463,6 @@ if ($_SESSION['role'] == 'supervisor' && (!isset($_SESSION['progressid']) || !is
           }
         });
       });
-
-      // $("#remove").on("click", function() {
-      //   var id = $("#taskname2").val();
-      //   var index = data.findIndex(e => e[0] === id);
-      //   data.splice(index, 1);
-      //   for (let i = 0; i < data.length; i++) {
-      //     if (data[i][6] === null || data[i][6] === "") continue;
-      //     let dependencies = data[i][6].split(",");
-      //     let j = dependencies.findIndex(e => e === id);
-      //     if (j !== -1) dependencies.splice(j, 1);
-      //     data[i][6] = dependencies.join(",");
-      //     if (data[i][6] === "") data[i][6] = null;
-      //   }
-      //   updateChart(data);
-      //   updateTaskNames();
-      //   if ($("#taskname2").val() !== "") {
-      //     updateForms($("#taskname2").val());
-      //   }
-      //   $("#depend").empty();
-      //   data.forEach(function(item, index) {
-      //     $("#depend").append(`<option>${item[0]}</option>`);
-      //   });
-      //   $("#depend").selectpicker("refresh");
-      // });
     });
   </script>
 </body>
