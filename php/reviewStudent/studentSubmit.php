@@ -38,6 +38,12 @@ if (isset($_POST['emailAddr']) && isset($_POST['reportname']) && isset($_FILES['
         "msg" => "Successfully uploaded report."
     ));
 } else {
+    if (!isset($_POST['emailAddr'])) {
+        exit(json_encode(array(
+            "status" => "fail",
+            "msg" => "Submit failed, you must add at least one supervisor in order to submit report."
+        )));
+    }
     // send fail message
     echo json_encode(array(
         "status" => "fail",

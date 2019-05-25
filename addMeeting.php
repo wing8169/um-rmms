@@ -165,7 +165,7 @@ if (!isset($_SESSION['user'])) {
             </div>
 
             <div class="form-group">
-              <label for="guests">Add Guests</label>
+              <label for="guests">Add Guests (separated with comma)</label>
               <input type="text" class="form-control typeahead" id="guests" />
             </div>
             <div class="row justify-content-center">

@@ -59,6 +59,7 @@ try {
   <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous" />
   <link rel="stylesheet" href="css/manageMeeting/meetingrecord.css" />
   <link href="//fonts.googleapis.com/css?family=Mukta" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.ico">
 </head>
 
 <body>
@@ -207,12 +208,11 @@ try {
           <form novalidate method="POST">
             <div class="form-group">
               <label for="description">Choose your meeting</label>
-              <select name="meetinglist">
+              <select name="meetinglist" class="custom-select">
                 <?php
                 try {
                   $connString = "mysql:host=127.0.0.1;dbname=umrmms";
                   $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
-
                   $sql = "SELECT ID, title FROM meeting";
                   $cmd = $pdo->prepare($sql);
                   $cmd->execute();

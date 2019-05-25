@@ -88,7 +88,30 @@ if (!isset($_SESSION['user'])) {
           <form novalidate method="POST" enctype="multipart/form-data" id="form">
             <div class="form-group">
               <label for="emailAddr">*Email address:</label>
-              <input name="emailAddr" type="email" class="form-control typeahead" id="emailAddr" aria-describedby="emailHelp" placeholder="Enter email of recipient" />
+              <select name="emailAddr" id="emailAddr" class="form-control custom-select">
+                <?php
+                try {
+                  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
+                  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                  $sql = "SELECT user.email FROM user INNER JOIN student ON student_id = '$_SESSION[id]';";
+                  $cmd = $pdo->prepare($sql);
+                  $cmd->execute();
+                  $result = $cmd->fetchAll(PDO::FETCH_ASSOC);
+                  $isFirst = true;
+                  foreach ($result as $row) {
+                    if ($isFirst) {
+                      echo  '<option value="' .  $row['email'] . " " . '"selected>' . $row['email'] . '</option>';
+                    } else {
+                      echo '<option value="' . $row['email'] . " " . '">' . $row['email'] . '</option>';
+                    }
+                    $isFirst = false;
+                  }
+                  $pdo = null;
+                } catch (PDOException $e) {
+                  echo " Error: " .  $e->getMessage();
+                  exit;
+                }
+                ?></select>
               <small id="emailHelp" class="form-text text-muted" required>Recipient email</small>
             </div>
             <div class="form-group">
@@ -218,7 +241,6 @@ if (!isset($_SESSION['user'])) {
       });
     });
   </script>
-  <script src="js/autocomplete.js"></script>
 </body>
 
 </html>
