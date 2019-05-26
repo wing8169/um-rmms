@@ -4,7 +4,9 @@
   },
   "scripts": {
     "compile": [
-      "chmod -R 777 /"
+      "chmod 777 events.json",
+      "chmod -R 777 reports",
+      "chmod -R 777 reviews"
     ]
   }
 }
