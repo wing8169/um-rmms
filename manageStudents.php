@@ -1,10 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-  header("Location: /um-rmms");
+  header("Location: /");
 }
 if (isset($_SESSION['role']) && $_SESSION['role'] != 'supervisor') {
-  header('Location: /um-rmms');
+  header('Location: /');
 }
 ?>
 <!DOCTYPE html>
@@ -172,7 +172,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] != 'supervisor') {
           cache: false,
           success: function(data) {
             if (data == "success") {
-              location.href = "/um-rmms";
+              location.href = "/";
             }
           }
         });

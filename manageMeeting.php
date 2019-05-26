@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-  header("Location: /um-rmms");
+  header("Location: /");
 }
 
 //Get Heroku ClearDB connection information
@@ -463,7 +463,7 @@ try {
           cache: false,
           success: function(data) {
             if (data == "success") {
-              location.href = "/um-rmms";
+              location.href = "/";
             }
           }
         });

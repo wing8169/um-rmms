@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-  header("Location: /um-rmms");
+  header("Location: /");
 }
 ?>
 
@@ -170,7 +170,7 @@ if (!isset($_SESSION['user'])) {
           cache: false,
           success: function(data) {
             if (data == "success") {
-              location.href = "/um-rmms";
+              location.href = "/";
             }
           }
         });

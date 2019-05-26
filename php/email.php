@@ -47,7 +47,7 @@ if (isset($_POST['email'])) {
         $email = password_hash($email, PASSWORD_DEFAULT);
         // encode email with date
         $email = encode_email($email);
-        $link_to_reset = 'http://localhost/um-rmms/php/resetpassword.php?email=' . $email;
+        $link_to_reset = 'http://um-rmms.herokuapp.com/php/resetpassword.php?email=' . $email;
         // send reset password email to user
         $mail = new PHPMailer();
         $mail->isSMTP();

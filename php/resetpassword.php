@@ -58,7 +58,7 @@ if (isset($_GET['email'])) {
         )));
     }
     $_SESSION['tmp'] = $ori_email;
-    header("Location: /um-rmms/resetpassword.html");
+    header("Location: /resetpassword.html");
 } else {
     // send fail message
     echo json_encode(array(
