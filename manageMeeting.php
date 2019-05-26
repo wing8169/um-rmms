@@ -4,9 +4,17 @@ if (!isset($_SESSION['user'])) {
   header("Location: /um-rmms");
 }
 
+//Get Heroku ClearDB connection information
+$cleardb_url      = parse_url("mysql://bca398946056c0:db2a3802@us-cdbr-iron-east-02.cleardb.net/heroku_8ac57aa6a74cd67?reconnect=true");
+
+$cleardb_server   = $cleardb_url["host"];
+$cleardb_username = $cleardb_url["user"];
+$cleardb_password = $cleardb_url["pass"];
+$cleardb_db       = substr($cleardb_url["path"], 1);
+$connString = "mysql:host=$cleardb_server;dbname=$cleardb_db";
+
 try {
-  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
-  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+  $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
   $user_id = $_SESSION["id"];
 
   $query1 = "SELECT * FROM meeting WHERE user_id  = '$user_id' OR ID in (SELECT meeting_id FROM guest WHERE user_id = '$user_id');";
@@ -24,7 +32,6 @@ try {
   while ($row = $result2->fetch()) {
     $meeting_notes[] = array('meetingnotesID' => $row['ID'], 'full_name' => $row['full_name'], 'title' => $row['title'], 'note_description' => $row['description']);
   }
-
   $query3 = "SELECT full_name FROM user where ID = $user_id;";
   $result3 = $pdo->query($query3);
   $full_name = $result3->fetch();
@@ -87,7 +94,7 @@ try {
               </button>
               <button type="submit" class="btn btn-primary" name="delete" <?php
                                                                           // get user_id of meeting owner
-                                                                          $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                          $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
                                                                           $query = "SELECT user_id FROM meeting WHERE ID='$record[ID]'";
                                                                           $result = $pdo->query($query);
                                                                           $owner_id = "";
@@ -163,7 +170,7 @@ try {
                 </button>
                 <button type="submit" class="btn btn-primary" name="edit" <?php
                                                                           // get user_id of meeting owner
-                                                                          $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                          $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
                                                                           $query = "SELECT user_id FROM meeting WHERE ID='$record[ID]'";
                                                                           $result = $pdo->query($query);
                                                                           $owner_id = "";
@@ -211,7 +218,7 @@ try {
               </button>
               <button type="submit" class="btn btn-primary" name="delete_note" <?php
                                                                                 // get user_id of meeting_note owner
-                                                                                $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                                                                                $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
                                                                                 $query = "SELECT user_id FROM meeting_notes WHERE ID='$meeting_note[meetingnotesID]'";
                                                                                 $result = $pdo->query($query);
                                                                                 $owner_id = "";
@@ -253,8 +260,7 @@ try {
               <select name="meetinglist" class="custom-select">
                 <?php
                 try {
-                  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
-                  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                  $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
                   $sql = "SELECT ID, title FROM meeting WHERE user_id = '$user_id' OR ID in (SELECT meeting_id FROM guest WHERE user_id = '$user_id');";
                   $cmd = $pdo->prepare($sql);
                   $cmd->execute();
@@ -466,8 +472,7 @@ try {
   </script>
   <?php
   try {
-    $connString = "mysql:host=127.0.0.1;dbname=umrmms";
-    $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+    $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
 
     if (isset($_POST['delete'])) {
       if (
