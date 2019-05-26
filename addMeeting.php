@@ -230,7 +230,7 @@ include('php/addMeeting/selectMeeting.php');
     $(document).ready(function() {
       setTimeout(() => {
         var script = document.createElement("script");
-        script.src = "js/addMeeting/calendar.js";
+        script.src = "js/addMeeting/app.js";
         script.type = "text/javascript";
         document.getElementsByTagName("head")[0].appendChild(script);
       }, 1000);
@@ -258,7 +258,6 @@ include('php/addMeeting/selectMeeting.php');
           return;
         }
         let starttime = $("#datepicker").val() + " " + $("#starttime").val() + ":00";
-        console.log(starttime);
         let endtime = $("#datepicker").val() + " " + $("#endtime").val() + ":00";
         let title = $("#title").val();
         let venue = $("#venue").val();
@@ -281,7 +280,6 @@ include('php/addMeeting/selectMeeting.php');
           data: data,
           cache: false,
           success: function(data) {
-            console.log(data);
             data = JSON.parse(data);
             alert(data["msg"]);
             setTimeout(function() {
@@ -293,7 +291,7 @@ include('php/addMeeting/selectMeeting.php');
       });
     });
   </script>
-  <script src="js/addMeeting/app.js"></script>
+  <!-- <script src="js/addMeeting/app.js"></script> -->
   <script src="js/autocomplete.js"></script>
 </body>
 

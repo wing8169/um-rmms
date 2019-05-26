@@ -41,4 +41,4 @@ while ($row = $result->fetch_assoc()) {
 }
 $data["result"] = $new_data;
 $newJsonString = json_encode($data);
-file_put_contents('../../events.json', $newJsonString);
+file_put_contents('events.json', $newJsonString);

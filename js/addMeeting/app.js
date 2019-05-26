@@ -1,12 +1,26 @@
+function pad(num, size) {
+  var s = num + "";
+  while (s.length < size) s = "0" + s;
+  return s;
+}
+
 (function($) {
   "use strict";
+
+  var today = new Date();
+  var date =
+    today.getFullYear() +
+    "-" +
+    pad(today.getMonth() + 1, 2) +
+    "-" +
+    pad(today.getDate(), 2);
 
   var options = {
     events_source: "events.json",
     view: "month",
     tmpl_path: "tmpls/",
     tmpl_cache: false,
-    day: "2013-03-12",
+    day: date,
     onAfterEventsLoad: function(events) {
       //   if (!events) {
       //     return;
