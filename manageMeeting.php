@@ -9,8 +9,7 @@ try {
   $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
   $user_id = $_SESSION["id"];
 
-
-  $query1 = "SELECT * FROM meeting";
+  $query1 = "SELECT * FROM meeting WHERE user_id  = '$user_id' OR ID in (SELECT meeting_id FROM guest WHERE user_id = '$user_id');";
   $result1 = $pdo->query($query1);
 
   $records = array();
