@@ -552,7 +552,7 @@
 var $input = $(".typeahead");
 $.ajax({
   type: "POST",
-  url: "/um-rmms/php/addMeeting/getEmails.php",
+  url: "/php/addMeeting/getEmails.php",
   data: {},
   cache: false,
   success: function(data) {
