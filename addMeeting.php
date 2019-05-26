@@ -3,6 +3,7 @@ session_start();
 if (!isset($_SESSION['user'])) {
   header("Location: /");
 }
+include('php/addMeeting/selectMeeting.php');
 ?>
 
 <!DOCTYPE html>
@@ -227,6 +228,12 @@ if (!isset($_SESSION['user'])) {
 
   <script type="text/javascript">
     $(document).ready(function() {
+      setTimeout(() => {
+        var script = document.createElement("script");
+        script.src = "js/addMeeting/calendar.js";
+        script.type = "text/javascript";
+        document.getElementsByTagName("head")[0].appendChild(script);
+      }, 1000);
       $("#sidebarCollapse").on("click", function() {
         $("#sidebar").toggleClass("active");
         $(this).toggleClass("active");
