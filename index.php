@@ -112,7 +112,7 @@ if (isset($_SESSION['user'])) {
           <input id="psw" type="password" placeholder="Enter Password" name="psw" class="form-control" required />
         </div>
         <div class="row justify-content-center">
-          <button id="signin" type="submit" class="btn btn-primary col-5">
+          <button id="signin" type="button" class="btn btn-primary col-5">
             Login
           </button>
         </div>
@@ -278,7 +278,6 @@ if (isset($_SESSION['user'])) {
             data = JSON.parse(data);
             //check if what response is   
             if (data['status'] === "success") {
-              alert(data['msg']);
               location.href = '/addMeeting.php';
             } else {
               alert(data['msg']);
