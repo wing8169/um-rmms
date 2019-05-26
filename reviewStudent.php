@@ -98,8 +98,15 @@ if (!isset($_SESSION['user'])) {
               <select name="emailAddr" id="emailAddr" class="form-control custom-select">
                 <?php
                 try {
-                  $connString = "mysql:host=127.0.0.1;dbname=umrmms";
-                  $pdo = new PDO($connString, 'jiaxiong', 'jiaxiong');
+                  //Get Heroku ClearDB connection information
+                  $cleardb_url      = parse_url("mysql://bca398946056c0:db2a3802@us-cdbr-iron-east-02.cleardb.net/heroku_8ac57aa6a74cd67?reconnect=true");
+
+                  $cleardb_server   = $cleardb_url["host"];
+                  $cleardb_username = $cleardb_url["user"];
+                  $cleardb_password = $cleardb_url["pass"];
+                  $cleardb_db       = substr($cleardb_url["path"], 1);
+                  $connString = "mysql:host=$cleardb_server;dbname=$cleardb_db";
+                  $pdo = new PDO($connString, $cleardb_username, $cleardb_password);
                   $sql = "SELECT user.email FROM user WHERE user.ID in (SELECT user_id FROM student WHERE student_id = '$_SESSION[id]');";
                   $cmd = $pdo->prepare($sql);
                   $cmd->execute();
