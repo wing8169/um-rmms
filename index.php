@@ -278,7 +278,8 @@ if (isset($_SESSION['user'])) {
             data = JSON.parse(data);
             //check if what response is   
             if (data['status'] === "success") {
-              location.href = 'addMeeting.php';
+              alert(data['msg']);
+              location.href = '/addMeeting.php';
             } else {
               alert(data['msg']);
             }
