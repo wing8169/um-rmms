@@ -3,7 +3,7 @@ session_start();
 include("../config.php");
 
 // get all reports data
-$stmt = $conn->prepare("SELECT report.ID, user.full_name, report.name, report.status, report.review, report.file_path, report.review_path, report.submission_date FROM report INNER JOIN user on user.ID = report.user_id WHERE report.rec_id = ?;");
+$stmt = $conn->prepare("SELECT report.ID, user.full_name, report.name, report.status, report.review, report.file_path, report.review_path, report.submission_date FROM report INNER JOIN user on user.ID = report.user_id WHERE report.rec_id = ? ORDER BY report.submission_date DESC;");
 $stmt->bind_param("i", $_SESSION['id']);
 $stmt->execute();
 $result = $stmt->get_result();
