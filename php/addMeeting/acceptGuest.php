@@ -53,6 +53,16 @@ if (isset($_GET['email']) && isset($_GET['id'])) {
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     $tmp_id = $row['ID'];
+    // find if the user id is already in the meeting.
+    $stmt = $conn->prepare("SELECT COUNT(*) as tmp FROM guest WHERE user_id=? AND meeting_id=?");
+    $stmt->bind_param("ii", $tmp_id, $ori_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $tmp = $row['tmp'];
+    if ($tmp != 0) {
+        exit("<script type='text/javascript'>alert('You are already in the meeting. You will be redirected to the home page now.'); location.href = '/';</script>");
+    }
     // insert the user id
     $stmt = $conn->prepare("INSERT INTO guest(user_id, meeting_id) VALUES (?, ?);");
     $stmt->bind_param("ii", $tmp_id, $ori_id);
