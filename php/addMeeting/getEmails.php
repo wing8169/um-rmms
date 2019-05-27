@@ -8,6 +8,6 @@ $result = $stmt->get_result();
 $emails = array();
 while ($row = $result->fetch_assoc()) {
     $tmp = $row['email'];
-    array_push($emails, $tmp);
+    if ($tmp != $_SESSION['user']) array_push($emails, $tmp);
 }
 echo json_encode($emails);

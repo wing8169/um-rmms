@@ -100,7 +100,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] != 'supervisor') {
       <div class="row justify-content-center align-items-center">
         <form class="col-7 container mt-5 ml-3 mr-3" action="" novalidate method="POST">
           <div class="form-group">
-            <input id="email" type="text" placeholder="Enter email" name="email" class="form-control typeahead" required />
+            <input id="email" type="text" placeholder="Enter email" name="email" class="form-control typeahead" autocomplete="off" required />
           </div>
           <div class="text-center">
             <button id="addstudent" type="button" class="btn btn-primary mt-3">

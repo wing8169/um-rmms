@@ -1,6 +1,5 @@
 <?php
 session_start();
-session_unset();
 include("../config.php");
 
 if (isset($_GET['email']) && isset($_GET['id'])) {
