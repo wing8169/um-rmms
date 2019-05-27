@@ -170,7 +170,7 @@ if (!isset($_SESSION['user'])) {
                     <input class="comment" id="${value["id"] + "comment"}" type="text" value="${value["comment"]}" />
                   </div>
                   <div class="setting">
-                    <P class="cancel"><i class="fas fa-times"></i>Cancel</P>
+                    <P class="cancel" id="${value["id"] + "delete"}"><i class="fas fa-times"></i>Delete</P>
                     <P class="save" id="${value["id"] + "save"}"><i class="far fa-save"></i>Save</P>
                   </div>
                 </div>
@@ -203,6 +203,20 @@ if (!isset($_SESSION['user'])) {
                 data: {
                   "deadline": deadline,
                   "comment": comment,
+                  "id": value['id'],
+                },
+                cache: false,
+                success: function(data) {
+                  location.reload(true);
+                }
+              });
+            });
+            $(`#${value['id']}delete`).click(function() {
+              // send request
+              $.ajax({
+                type: "POST",
+                url: "php/checklist/deleteList.php",
+                data: {
                   "id": value['id'],
                 },
                 cache: false,

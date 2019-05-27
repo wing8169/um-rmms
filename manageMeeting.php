@@ -151,9 +151,9 @@ try {
               <div class="form-group">
                 <label for="venue">Venue*</label>
                 <select class="custom-select" name="venue" required>
-                  <option value="FCSIT,MM4" <?php if ("$record[venue]" == 'FCSIT,MM4') echo ' selected="selected"'; ?>>FCSIT,MM4</option>
-                  <option value="FCSIT,DK2" <?php if ("$record[venue]" == 'FCSIT,DK2') echo ' selected="selected"'; ?>>FCSIT,DK2</option>
-                  <option value="FCSIT,DK1" <?php if ("$record[venue]" == 'FCSIT,DK1') echo ' selected="selected"'; ?>>FCSIT,DK1</option>
+                  <option value="FCSIT,MM4" <?php if ("$record[venue]" == 'MM4, FCSIT') echo ' selected="selected"'; ?>>FCSIT,MM4</option>
+                  <option value="FCSIT,DK2" <?php if ("$record[venue]" == 'DK2, FCSIT') echo ' selected="selected"'; ?>>FCSIT,DK2</option>
+                  <option value="FCSIT,DK1" <?php if ("$record[venue]" == 'DK1, FCSIT') echo ' selected="selected"'; ?>>FCSIT,DK1</option>
                 </select>
               </div>
 

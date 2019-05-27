@@ -1,6 +1,15 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+
+require_once('../PHPMailer/src/Exception.php');
+require_once('../PHPMailer/src/PHPMailer.php');
+require_once('../PHPMailer/src/SMTP.php');
+// umrmms@gmail.com
+// UM-0rmms
+
 session_start();
 include("../config.php");
+
 if (isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['title']) && isset($_POST['venue']) && isset($_POST['notification']) && isset($_POST['description'])) {
     // insert meeting schedule into database
     $stmt = $conn->prepare("INSERT INTO meeting(user_id, start_time, end_time, title, venue, notification, description) VALUES (?, ?, ?, ?, ?, ?, ?);");
@@ -8,21 +17,69 @@ if (isset($_POST['start_time']) && isset($_POST['end_time']) && isset($_POST['ti
     $stmt->execute();
     $id = $stmt->insert_id;
     $stmt->close();
-    // insert guests into database
+    // send notification email to owner
+    $email = $_SESSION['user'];
+    $mail = new PHPMailer();
+    $mail->isSMTP();
+    $mail->SMTPAuth = true;
+    $mail->SMTPSecure = 'ssl';
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Port = '465';
+    $mail->isHTML(true);
+    $mail->Username = 'umrmms@gmail.com';
+    $mail->Password = 'UM-0rmms';
+    $mail->setFrom('No-reply@umrmms.org');
+    $mail->Subject = 'UM-RMMS - New Meeting';
+    $msg = "<h4>Dear User:</h4>
+            <h4>Thank you for using our service. Below are the details of new meeting added:</h4>
+            <ul>
+                <li>Title: " . $_POST['title'] . "</li>
+                <li>Description: " . $_POST['description'] . "</li>
+                <li>Start time: " . $_POST['start_time'] . "</li>
+                <li>End time: " . $_POST['end_time'] . "</li>
+                <li>Venue: " . $_POST['venue'] . "</li>
+            </ul>
+            <h4>Sincerely</h4>
+            <h4>Community of UM-RMMS</h4>
+            ";
+    $mail->Body = $msg;
+    $mail->addAddress($email);
+    $mail->Send();
     $guest_list = explode(",", $_POST["guests"]);
     foreach ($guest_list as &$guest) {
-        // find the user id
-        $stmt = $conn->prepare("SELECT ID FROM user WHERE email=?");
-        $stmt->bind_param("s", $guest);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $tmp_id = $row['ID'];
-        // insert the user id
-        $stmt = $conn->prepare("INSERT INTO guest(user_id, meeting_id) VALUES (?, ?);");
-        $stmt->bind_param("ii", $tmp_id, $id);
-        $stmt->execute();
-        $stmt->close();
+        // send notification email to all guests
+        $email = $guest;
+        $email = password_hash($email, PASSWORD_DEFAULT);
+        $id = password_hash($id, PASSWORD_DEFAULT);
+        $link_to_reset = 'https://um-rmms.herokuapp.com/php/addMeeting/acceptGuest.php?email=' . $email . '&id=' . $id;
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = '465';
+        $mail->isHTML(true);
+        $mail->Username = 'umrmms@gmail.com';
+        $mail->Password = 'UM-0rmms';
+        $mail->setFrom('No-reply@umrmms.org');
+        $mail->Subject = 'UM-RMMS - New Meeting Invitation';
+        $msg = "<h4>Dear User:</h4>
+            <h4>Thank you for using our service. Below are the details of new meeting invitation:</h4>
+            <ul>
+                <li>Title: " . $_POST['title'] . "</li>
+                <li>Description: " . $_POST['description'] . "</li>
+                <li>Start time: " . $_POST['start_time'] . "</li>
+                <li>End time: " . $_POST['end_time'] . "</li>
+                <li>Venue: " . $_POST['venue'] . "</li>
+            </ul>
+            <h4>Kindly click the link here to accept the meeting: </h4>
+            <a href='" . $link_to_reset . "'>" . $link_to_reset . "</a>
+            <h4>Sincerely</h4>
+            <h4>Community of UM-RMMS</h4>
+            ";
+        $mail->Body = $msg;
+        $mail->addAddress($guest);
+        $mail->Send();
     }
     // update events.json
     $jsonString = file_get_contents('../../events.json');

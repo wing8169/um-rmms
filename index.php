@@ -236,6 +236,8 @@ if (isset($_SESSION['user'])) {
       $("#signup").click(function() {
         if ($("#pswSignUp").val() !== $("#pswSignUpConfirm").val()) {
           alert("Please check your password confirmation.");
+        } else if ($("#fullname").val() == "" || $("#emailSignUp").val() == "" || $("#pswSignUp").val() == "") {
+          alert("Please fill in all the required fields.");
         } else {
           let data = {
             "fullname": $("#fullname").val(),
@@ -263,27 +265,31 @@ if (isset($_SESSION['user'])) {
       });
       // sign in operation
       $("#signin").click(function() {
-        // initialize data
-        let data = {
-          "email": $("#email").val(),
-          "password": $("#psw").val(),
-        };
-        // send request
-        $.ajax({
-          type: "POST",
-          url: "php/signin.php",
-          data: data,
-          cache: false,
-          success: function(data) { // 'data' is the variable holding the return from PHP's echo
-            data = JSON.parse(data);
-            //check if what response is   
-            if (data['status'] === "success") {
-              location.href = '/addMeeting.php';
-            } else {
-              alert(data['msg']);
+        if ($("#email").val() == "" || $("#psw").val() == "") {
+          alert("Please do not leave the fields blank!");
+        } else {
+          // initialize data
+          let data = {
+            "email": $("#email").val(),
+            "password": $("#psw").val(),
+          };
+          // send request
+          $.ajax({
+            type: "POST",
+            url: "php/signin.php",
+            data: data,
+            cache: false,
+            success: function(data) { // 'data' is the variable holding the return from PHP's echo
+              data = JSON.parse(data);
+              //check if what response is   
+              if (data['status'] === "success") {
+                location.href = '/addMeeting.php';
+              } else {
+                alert(data['msg']);
+              }
             }
-          }
-        });
+          });
+        }
       });
       // send reset password email operation
       $("#sendemail").click(function() {

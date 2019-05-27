@@ -214,7 +214,7 @@ include('php/addMeeting/selectMeeting.php');
     function getTime(milli) {
       var tmp = new Date(parseInt(milli));
       var tmpTime = tmp.toLocaleTimeString();
-      return tmpTime.slice(0, 4) + " " + tmpTime.slice(8).toLowerCase();
+      return tmpTime.slice(0, 5) + " " + tmpTime.slice(8).toLowerCase();
     }
   </script>
   <!-- jQuery CDN - Minified version -->
@@ -280,6 +280,7 @@ include('php/addMeeting/selectMeeting.php');
           data: data,
           cache: false,
           success: function(data) {
+            console.log(data);
             data = JSON.parse(data);
             alert(data["msg"]);
             setTimeout(function() {

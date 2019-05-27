@@ -60,7 +60,12 @@ if (isset($_POST['email'])) {
         $mail->Password = 'UM-0rmms';
         $mail->setFrom('No-reply@umrmms.org');
         $mail->Subject = 'UM-RMMS - Confirmation for Password Reset';
-        $msg = "<h1>Dear User:</h1><h1>Thank you for using our service. Please click the link below for password reset:</h1><a href='" . $link_to_reset . "'>" . $link_to_reset . "</a><h2>Take note that the link will expire after 1 day.</2>";
+        $msg = "<h2>Dear User:</h2>
+                <h2>Thank you for using our service. Please click the link below for password reset:</h2>
+                <a href='" . $link_to_reset . "'>" . $link_to_reset . "</a>
+                <h2>Take note that the link will expire after 1 day.</h2>
+                ";
+        // $msg = "<h1>Dear User:</h1><h1>Thank you for using our service. Please click the link below for password reset:</h1><a href='" . $link_to_reset . "'>" . $link_to_reset . "</a><h2>Take note that the link will expire after 1 day.</2>";
         $mail->Body = $msg;
         $mail->addAddress($_POST['email']);
         $mail->Send();
