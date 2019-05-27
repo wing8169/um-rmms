@@ -157,7 +157,7 @@ include('php/addMeeting/selectMeeting.php');
               </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display: None;">
               <label for="notification">Notification</label>
               <select id="notification" class="custom-select" required>
                 <option value="0">No Notification</option>
