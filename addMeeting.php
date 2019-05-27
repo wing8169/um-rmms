@@ -174,7 +174,7 @@ include('php/addMeeting/selectMeeting.php');
 
             <div class="form-group">
               <label for="guests">Add Guests (separated with comma)</label>
-              <input type="text" class="form-control typeahead" id="guests" />
+              <input type="text" class="form-control typeahead" id="guests" autocomplete="off" />
             </div>
             <div class="row justify-content-center">
               <button type="button" class="btn btn-primary" id="addmeeting">
